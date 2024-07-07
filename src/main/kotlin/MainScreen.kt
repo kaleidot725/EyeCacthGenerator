@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import configuration.ImageConfiguration
 import org.jetbrains.jewel.foundation.theme.JewelTheme
+import preview.ImagePreview
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
