@@ -1,4 +1,5 @@
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,7 +11,6 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.intui.standalone.theme.IntUiTheme
 import org.jetbrains.jewel.intui.standalone.theme.darkThemeDefinition
-import org.jetbrains.jewel.intui.standalone.theme.lightThemeDefinition
 import org.jetbrains.jewel.intui.window.decoratedWindow
 import org.jetbrains.jewel.intui.window.styling.dark
 import org.jetbrains.jewel.ui.ComponentStyling
@@ -36,7 +36,9 @@ fun main() = application {
             ) {
                 Text(text = "EyeGen", textAlign = TextAlign.Center)
             }
-            MainScreen()
+            MainScreen(
+                modifier = Modifier.background(JewelTheme.globalColors.paneBackground)
+            )
         }
     }
 }
