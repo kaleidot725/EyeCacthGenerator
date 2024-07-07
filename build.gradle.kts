@@ -36,9 +36,13 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            targetFormats(TargetFormat.Dmg)
             packageName = "EyeGen"
             packageVersion = "1.0.0"
+
+            macOS {
+                iconFile.set(project.file("icon.icns"))
+            }
         }
     }
 }

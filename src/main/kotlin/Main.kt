@@ -27,6 +27,7 @@ fun main() = application {
     ) {
         DecoratedWindow(
             title = "EyeGen",
+            icon = painterResource("icon.png"),
             onCloseRequest = ::exitApplication,
         ) {
             TitleBar(
