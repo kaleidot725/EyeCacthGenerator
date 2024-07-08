@@ -10,6 +10,5 @@
     <string name="category_color">Color</string>
     <string name="start_color_title">Start</string>
     <string name="end_color_title">End</string>
-
     <string name="save">Save</string>
 </resources>

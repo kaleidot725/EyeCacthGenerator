@@ -2,8 +2,11 @@ package configuration
 
 import component.TitleText
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
+import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
@@ -53,11 +57,12 @@ fun ImageConfiguration(
     onChangedEndColor: (Color) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val controller = rememberColorPickerController()
+    val controller : ColorPickerController = rememberColorPickerController()
     var selectedStartColor by remember { mutableStateOf(false) }
     var selectedEndColor by remember { mutableStateOf(false) }
-    val selectedAnyColor by remember(selectedStartColor, selectedEndColor) {
-        mutableStateOf(selectedStartColor || selectedEndColor)
+
+    LaunchedEffect(selectedStartColor, selectedEndColor) {
+        controller.enabled = (selectedStartColor || selectedEndColor)
     }
 
     Column(
@@ -103,7 +108,7 @@ fun ImageConfiguration(
         ) {
             Text(
                 text = stringResource(Res.string.width_title),
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
+                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
             )
 
             TextField(
@@ -111,10 +116,14 @@ fun ImageConfiguration(
                 onValueChange = { onChangedWidth(it.toIntOrNull() ?: 0) },
                 modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
             )
+        }
 
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             Text(
                 text = stringResource(Res.string.height_title),
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
+                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
             )
 
             TextField(
@@ -129,9 +138,15 @@ fun ImageConfiguration(
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            Box(modifier = Modifier
+                .size(20.dp)
+                .background(startColor, CircleShape)
+                .align(Alignment.CenterVertically)
+            )
+
             Text(
                 text = stringResource(Res.string.start_color_title),
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
+                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
             )
 
             TextField(
@@ -145,10 +160,20 @@ fun ImageConfiguration(
                         if (selectedStartColor) controller.selectByColor(startColor, true)
                     }
             )
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Box(modifier = Modifier
+                .size(20.dp)
+                .background(endColor, CircleShape)
+                .align(Alignment.CenterVertically)
+            )
 
             Text(
                 text = stringResource(Res.string.end_color_title),
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
+                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
             )
 
             TextField(
@@ -184,18 +209,15 @@ fun ImageConfiguration(
         AlphaSlider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
                 .height(35.dp),
-            controller = controller,
+            controller = controller
         )
 
         BrightnessSlider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-                .height(35.dp)
-                .align(Alignment.CenterHorizontally),
-            controller = controller,
+                .height(35.dp),
+            controller = controller
         )
 
         Spacer(modifier = Modifier.weight(1.0f))
