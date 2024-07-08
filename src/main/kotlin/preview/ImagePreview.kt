@@ -6,16 +6,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
+import jp.kaleidot725.eyegen.eyegen.generated.resources.icon
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ImagePreview(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier) {
         Image(
-            painter = painterResource("icon.png"),
+            painter = painterResource(Res.drawable.icon),
             contentDescription = null
         )
     }
