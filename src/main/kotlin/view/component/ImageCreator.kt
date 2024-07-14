@@ -1,6 +1,5 @@
-package configuration
+package view.component
 
-import component.TitleText
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -42,7 +41,7 @@ import org.jetbrains.jewel.ui.util.toRgbaHexString
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ImageConfiguration(
+fun ImageCreator(
     title: String,
     onChangedTitle: (String) -> Unit,
     subTitle: String,
@@ -55,6 +54,7 @@ fun ImageConfiguration(
     onChangedStartColor: (Color) -> Unit,
     endColor: Color,
     onChangedEndColor: (Color) -> Unit,
+    onSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val controller : ColorPickerController = rememberColorPickerController()
@@ -226,7 +226,7 @@ fun ImageConfiguration(
             modifier = Modifier.align(Alignment.End),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            DefaultButton(onClick = {}) {
+            DefaultButton(onClick = onSave) {
                 Text(stringResource(Res.string.save))
             }
         }
@@ -237,7 +237,7 @@ fun ImageConfiguration(
 @Composable
 private fun Preview() {
     Box(modifier = Modifier.size(500.dp)) {
-        ImageConfiguration(
+        ImageCreator(
             title = "",
             onChangedTitle = {},
             subTitle = "",
@@ -250,6 +250,7 @@ private fun Preview() {
             onChangedStartColor = {},
             endColor = Color.Blue,
             onChangedEndColor = {},
+            onSave = {},
             modifier = Modifier
         )
     }

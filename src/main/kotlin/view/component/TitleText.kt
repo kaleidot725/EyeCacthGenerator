@@ -1,4 +1,4 @@
-package component
+package view.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
