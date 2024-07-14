@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
+import com.sun.tools.javac.Main
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ import org.jetbrains.jewel.foundation.theme.JewelTheme
 import view.component.ImageCreator
 import view.component.ImagePreview
 import java.io.File
+import java.util.Date
 
 @Composable
 fun MainScreen(
@@ -35,6 +37,7 @@ fun MainScreen(
     ) {
         ImagePreview(
             file = state.previewFile,
+            date = state.previewUpdate,
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1.0f)
@@ -58,6 +61,7 @@ fun MainScreen(
             onChangedStartColor = { onEvent(MainEvent.ChangeStartColor(it)) },
             endColor = state.parameters.endColor,
             onChangedEndColor = { onEvent(MainEvent.ChangeEndColor(it)) },
+            onPreview = { onEvent(MainEvent.Preview ) },
             onSave = { onEvent(MainEvent.Save) },
             modifier = Modifier.fillMaxHeight().width(400.dp),
         )
@@ -77,7 +81,8 @@ private fun Preview() {
                 startColor = Color.Red.value,
                 endColor = Color.Blue.value
             ),
-            previewFile = File("")
+            previewFile = File(""),
+            previewUpdate = Date().time
         ),
         onEvent = {}
     )

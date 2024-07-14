@@ -44,6 +44,7 @@ import view.MainProcessor
 import view.MainScreen
 import view.MainState
 import java.io.File
+import java.util.Date
 
 val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 val event = MutableSharedFlow<MainEvent>()
@@ -78,6 +79,7 @@ fun main() = application {
                 endColor = Color.Blue.value,
             ),
             previewFile = File(""),
+            previewUpdate = Date().time,
             isExit = false,
             window = Window()
         )

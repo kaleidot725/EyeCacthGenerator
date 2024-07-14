@@ -13,10 +13,12 @@ import model.Window
 import repository.ImageRepository
 import repository.WindowRepository
 import java.io.File
+import java.util.Date
 
 data class MainState(
     val parameters: Parameters,
     val previewFile: File,
+    val previewUpdate: Long,
     val window: Window? = null,
     val isExit: Boolean = false
 )
@@ -28,6 +30,7 @@ sealed interface MainEvent {
     data class ChangeHeight(val value: Int) : MainEvent
     data class ChangeStartColor(val color: ULong) : MainEvent
     data class ChangeEndColor(val color: ULong) : MainEvent
+    data object Preview : MainEvent
     data object Save : MainEvent
     data class Destroy(val window: Window) : MainEvent
 }
@@ -51,6 +54,7 @@ fun MainProcessor(
         )
     }
     var previewFile by remember { mutableStateOf(File("")) }
+    var previewUpdate by remember { mutableStateOf(0L) }
     val window by remember { mutableStateOf(windowRepository.get()) }
     var isExit by remember { mutableStateOf(false) }
 
@@ -59,27 +63,25 @@ fun MainProcessor(
             when (event) {
                 is MainEvent.ChangeTitle -> {
                     parameters = parameters.copy(title = event.value)
-                    previewFile = imageRepository.createPreview(parameters)
                 }
                 is MainEvent.ChangeSubTitle -> {
                     parameters = parameters.copy(subTitle = event.value)
-                    previewFile = imageRepository.createPreview(parameters)
                 }
                 is MainEvent.ChangeHeight -> {
                     parameters = parameters.copy(height = event.value)
-                    previewFile =  imageRepository.createPreview(parameters)
                 }
                 is MainEvent.ChangeWidth -> {
                     parameters = parameters.copy(width = event.value)
-                    previewFile = imageRepository.createPreview(parameters)
                 }
                 is MainEvent.ChangeStartColor -> {
                     parameters = parameters.copy(startColor = event.color)
-                    previewFile = imageRepository.createPreview(parameters)
                 }
                 is MainEvent.ChangeEndColor -> {
                     parameters = parameters.copy(endColor = event.color)
+                }
+                is MainEvent.Preview -> {
                     previewFile =  imageRepository.createPreview(parameters)
+                    previewUpdate = Date().time
                 }
                 is MainEvent.Save -> {
                     imageRepository.createFileToDesktop(parameters)
@@ -95,6 +97,7 @@ fun MainProcessor(
     return MainState(
         parameters = parameters,
         previewFile = previewFile,
+        previewUpdate = previewUpdate,
         window = window,
         isExit = isExit
     )

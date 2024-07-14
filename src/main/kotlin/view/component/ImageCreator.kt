@@ -27,6 +27,7 @@ import jp.kaleidot725.eyegen.eyegen.generated.resources.category_size
 import jp.kaleidot725.eyegen.eyegen.generated.resources.category_text
 import jp.kaleidot725.eyegen.eyegen.generated.resources.end_color_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.height_title
+import jp.kaleidot725.eyegen.eyegen.generated.resources.preview
 import jp.kaleidot725.eyegen.eyegen.generated.resources.save
 import jp.kaleidot725.eyegen.eyegen.generated.resources.start_color_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.subtitle_title
@@ -54,6 +55,7 @@ fun ImageCreator(
     onChangedStartColor: (ULong) -> Unit,
     endColor: ULong,
     onChangedEndColor: (ULong) -> Unit,
+    onPreview: () -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -226,6 +228,9 @@ fun ImageCreator(
             modifier = Modifier.align(Alignment.End),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            DefaultButton(onClick = onPreview) {
+                Text(stringResource(Res.string.preview))
+            }
             DefaultButton(onClick = onSave) {
                 Text(stringResource(Res.string.save))
             }
@@ -250,6 +255,7 @@ private fun Preview() {
             onChangedStartColor = {},
             endColor = Color.Blue.value,
             onChangedEndColor = {},
+            onPreview = {},
             onSave = {},
             modifier = Modifier
         )
