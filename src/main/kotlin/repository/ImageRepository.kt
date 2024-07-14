@@ -15,7 +15,7 @@ class ImageRepository {
     private val outputDirectory = File(OSContext.resolveOSContext().directory, "temp")
     private val outputFile = File(outputDirectory, "preview.png")
 
-    suspend fun createPreview(parameters: Parameters) : File {
+    suspend fun createPreview(parameters: Parameters): File {
         return withContext(Dispatchers.IO) {
             try {
                 Files.createDirectories(outputDirectory.toPath())
@@ -38,8 +38,12 @@ class ImageRepository {
 
                 val color = Color(parameters.startColor)
                 val awtColor = java.awt.Color(color.red, color.green, color.blue, color.alpha)
-                output.graphics.color = awtColor
-                output.graphics.fillRect(0, 0, parameters.width, parameters.height)
+                val graphics = output.graphics
+                graphics.color = awtColor
+                graphics.fillRect(0, 0, parameters.width, parameters.height)
+                graphics.drawString(parameters.title, 0, 100)
+                graphics.drawString(parameters.subTitle, 0, 200)
+                graphics.dispose()
                 ImageIO.write(output, "PNG", outputFile)
                 outputFile
             } catch (e: IOException) {
@@ -48,7 +52,7 @@ class ImageRepository {
         }
     }
 
-    suspend fun createFileToDesktop(parameters: Parameters) : Boolean {
+    suspend fun createFileToDesktop(parameters: Parameters): Boolean {
         return false
     }
 }
