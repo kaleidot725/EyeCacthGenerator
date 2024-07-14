@@ -44,9 +44,7 @@ fun MainScreen(
         )
         ImageCreator(
             title = state.title,
-            onChangedTitle = {
-                onEvent(MainEvent.ChangeTitle(it))
-                             },
+            onChangedTitle = { onEvent(MainEvent.ChangeTitle(it)) },
             subTitle = state.subTitle,
             onChangedSubTitle = {onEvent(MainEvent.ChangeSubTitle(it)) },
             width = state.width,

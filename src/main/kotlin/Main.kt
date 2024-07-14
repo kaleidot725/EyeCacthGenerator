@@ -1,11 +1,13 @@
 import androidx.compose.foundation.background
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.application
 import app.cash.molecule.RecompositionMode
@@ -31,6 +33,10 @@ import org.jetbrains.jewel.window.DecoratedWindow
 import org.jetbrains.jewel.window.TitleBar
 import org.jetbrains.jewel.window.newFullscreenControls
 import org.jetbrains.jewel.window.styling.TitleBarStyle
+import repository.Window
+import repository.Window.Companion.toWindow
+import repository.Window.Companion.toWindowState
+import repository.WindowRepository
 import view.MainEvent
 import view.MainProcessor
 import view.MainScreen
@@ -38,10 +44,19 @@ import view.MainState
 
 val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 val event = MutableSharedFlow<MainEvent>()
-val stateFlow: Flow<MainState> = scope.launchMolecule(mode = RecompositionMode.Immediate) { MainProcessor(event) }
+val windowRepository = WindowRepository()
+val window = windowRepository.get()
+val stateFlow: Flow<MainState> = scope.launchMolecule(mode = RecompositionMode.Immediate) {
+    MainProcessor(
+        event = event,
+        windowRepository = windowRepository
+    )
+}
 
 @OptIn(ExperimentalResourceApi::class)
 fun main() = application {
+    val density = LocalDensity.current
+    val windowState by remember(window) { mutableStateOf(window.toWindowState(density)) }
     val state by stateFlow.collectAsState(
         MainState(
             title = "Hello World",
@@ -49,9 +64,19 @@ fun main() = application {
             width = 1920,
             height = 1080,
             startColor = Color.Red,
-            endColor = Color.Blue
+            endColor = Color.Blue,
+            isExit = false,
+            window = Window()
         )
     )
+
+    SideEffect {
+        println(windowState.toString())
+    }
+
+    LaunchedEffect(state.isExit) {
+        if (state.isExit) exitApplication()
+    }
 
     IntUiTheme(
         theme = JewelTheme.darkThemeDefinition(),
@@ -59,8 +84,11 @@ fun main() = application {
     ) {
         DecoratedWindow(
             title = "EyeGen",
+            state = windowState,
             icon = painterResource(Res.drawable.icon),
-            onCloseRequest = ::exitApplication,
+            onCloseRequest = {
+                scope.launch { event.emit(MainEvent.Destroy(windowState.toWindow(density))) }
+            },
         ) {
             TitleBar(
                 style = TitleBarStyle.dark(),

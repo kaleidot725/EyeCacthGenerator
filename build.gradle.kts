@@ -27,6 +27,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
     implementation("app.cash.molecule:molecule-runtime:2.0.0")
+    implementation("com.russhwolf:multiplatform-settings:1.1.1")
 }
 
 kotlin {
