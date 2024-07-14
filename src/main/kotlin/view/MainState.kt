@@ -8,16 +8,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.Flow
-import repository.Window
+import model.Parameters
+import model.Window
+import repository.ImageRepository
 import repository.WindowRepository
+import java.io.File
 
 data class MainState(
-    val title: String = "",
-    val subTitle: String = "",
-    val width: Int = 0,
-    val height: Int = 0,
-    val startColor: Color = Color.Transparent,
-    val endColor: Color = Color.Transparent,
+    val parameters: Parameters,
+    val previewFile: File,
     val window: Window? = null,
     val isExit: Boolean = false
 )
@@ -26,37 +25,65 @@ sealed interface MainEvent {
     data class ChangeTitle(val value: String) : MainEvent
     data class ChangeSubTitle(val value: String) : MainEvent
     data class ChangeWidth(val value: Int) : MainEvent
-    data class ChangeHeight(val  value: Int) : MainEvent
-    data class ChangeStartColor(val value: Color) : MainEvent
-    data class ChangeEndColor(val value: Color) : MainEvent
-    data object Save: MainEvent
-    data class Destroy(val window: Window): MainEvent
+    data class ChangeHeight(val value: Int) : MainEvent
+    data class ChangeStartColor(val color: ULong) : MainEvent
+    data class ChangeEndColor(val color: ULong) : MainEvent
+    data object Save : MainEvent
+    data class Destroy(val window: Window) : MainEvent
 }
 
 @Composable
 fun MainProcessor(
     event: Flow<MainEvent>,
     windowRepository: WindowRepository,
+    imageRepository: ImageRepository,
 ): MainState {
-    var title by remember { mutableStateOf("Hello World") }
-    var subTitle by remember { mutableStateOf("Hello World") }
-    var width by remember { mutableStateOf(1920) }
-    var height by remember { mutableStateOf(1080) }
-    var startColor by remember { mutableStateOf(Color.Red) }
-    var endColor by remember { mutableStateOf(Color.Blue) }
+    var parameters by remember {
+        mutableStateOf(
+            Parameters(
+                title = "TITLE",
+                subTitle = "SubTitle",
+                width = 1000,
+                height = 1000,
+                startColor = Color.Red.value,
+                endColor = Color.Blue.value
+            )
+        )
+    }
+    var previewFile by remember { mutableStateOf(File("")) }
     val window by remember { mutableStateOf(windowRepository.get()) }
     var isExit by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         event.collect { event ->
             when (event) {
-                is MainEvent.ChangeTitle -> title = event.value
-                is MainEvent.ChangeSubTitle -> subTitle = event.value
-                is MainEvent.ChangeHeight -> height = event.value
-                is MainEvent.ChangeWidth -> width = event.value
-                is MainEvent.ChangeStartColor -> startColor = event.value
-                is MainEvent.ChangeEndColor -> endColor = event.value
-                is MainEvent.Save -> { }
+                is MainEvent.ChangeTitle -> {
+                    parameters = parameters.copy(title = event.value)
+                    previewFile = imageRepository.createPreview(parameters)
+                }
+                is MainEvent.ChangeSubTitle -> {
+                    parameters = parameters.copy(subTitle = event.value)
+                    previewFile = imageRepository.createPreview(parameters)
+                }
+                is MainEvent.ChangeHeight -> {
+                    parameters = parameters.copy(height = event.value)
+                    previewFile =  imageRepository.createPreview(parameters)
+                }
+                is MainEvent.ChangeWidth -> {
+                    parameters = parameters.copy(width = event.value)
+                    previewFile = imageRepository.createPreview(parameters)
+                }
+                is MainEvent.ChangeStartColor -> {
+                    parameters = parameters.copy(startColor = event.color)
+                    previewFile = imageRepository.createPreview(parameters)
+                }
+                is MainEvent.ChangeEndColor -> {
+                    parameters = parameters.copy(endColor = event.color)
+                    previewFile =  imageRepository.createPreview(parameters)
+                }
+                is MainEvent.Save -> {
+                    imageRepository.createFileToDesktop(parameters)
+                }
                 is MainEvent.Destroy -> {
                     windowRepository.update(event.window)
                     isExit = true
@@ -66,12 +93,8 @@ fun MainProcessor(
     }
 
     return MainState(
-        title = title,
-        subTitle = subTitle,
-        width = width,
-        height = height,
-        startColor = startColor,
-        endColor = endColor,
+        parameters = parameters,
+        previewFile = previewFile,
         window = window,
         isExit = isExit
     )

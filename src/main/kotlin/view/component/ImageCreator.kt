@@ -50,10 +50,10 @@ fun ImageCreator(
     onChangedWidth: (Int) -> Unit,
     height: Int,
     onChangedHeight: (Int) -> Unit,
-    startColor: Color,
-    onChangedStartColor: (Color) -> Unit,
-    endColor: Color,
-    onChangedEndColor: (Color) -> Unit,
+    startColor: ULong,
+    onChangedStartColor: (ULong) -> Unit,
+    endColor: ULong,
+    onChangedEndColor: (ULong) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -140,7 +140,7 @@ fun ImageCreator(
         ) {
             Box(modifier = Modifier
                 .size(20.dp)
-                .background(startColor, CircleShape)
+                .background(Color(startColor), CircleShape)
                 .align(Alignment.CenterVertically)
             )
 
@@ -150,14 +150,14 @@ fun ImageCreator(
             )
 
             TextField(
-                value = startColor.toRgbaHexString(),
+                value = Color(startColor).toRgbaHexString(),
                 onValueChange = {},
                 modifier = Modifier
                     .weight(1.0f)
                     .align(Alignment.CenterVertically)
                     .onFocusChanged { state ->
                         selectedStartColor = state.hasFocus
-                        if (selectedStartColor) controller.selectByColor(startColor, true)
+                        if (selectedStartColor) controller.selectByColor(Color(startColor), true)
                     }
             )
         }
@@ -167,7 +167,7 @@ fun ImageCreator(
         ) {
             Box(modifier = Modifier
                 .size(20.dp)
-                .background(endColor, CircleShape)
+                .background(Color(endColor), CircleShape)
                 .align(Alignment.CenterVertically)
             )
 
@@ -177,14 +177,14 @@ fun ImageCreator(
             )
 
             TextField(
-                value = endColor.toRgbaHexString(),
+                value = Color(endColor).toRgbaHexString(),
                 onValueChange = {},
                 modifier = Modifier
                     .weight(1.0f)
                     .align(Alignment.CenterVertically)
                     .onFocusChanged { state ->
                         selectedEndColor = state.hasFocus
-                        if (selectedEndColor) controller.selectByColor(endColor, true)
+                        if (selectedEndColor) controller.selectByColor(Color(endColor), true)
                     }
             )
         }
@@ -197,10 +197,10 @@ fun ImageCreator(
             controller = controller,
             onColorChanged = { colorEnvelope: ColorEnvelope ->
                 if (selectedStartColor) {
-                    onChangedStartColor(colorEnvelope.color)
+                    onChangedStartColor(colorEnvelope.color.value)
                 }
                 if (selectedEndColor) {
-                    onChangedEndColor(colorEnvelope.color)
+                    onChangedEndColor(colorEnvelope.color.value)
                 }
             },
             initialColor = Color.Red
@@ -246,9 +246,9 @@ private fun Preview() {
             onChangedWidth = {},
             height = 0,
             onChangedHeight = {},
-            startColor = Color.Red,
+            startColor = Color.Red.value,
             onChangedStartColor = {},
-            endColor = Color.Blue,
+            endColor = Color.Blue.value,
             onChangedEndColor = {},
             onSave = {},
             modifier = Modifier

@@ -18,9 +18,11 @@ import app.cash.molecule.launchMolecule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import model.Parameters
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import view.component.ImageCreator
 import view.component.ImagePreview
+import java.io.File
 
 @Composable
 fun MainScreen(
@@ -32,6 +34,7 @@ fun MainScreen(
         modifier = modifier,
     ) {
         ImagePreview(
+            file = state.previewFile,
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1.0f)
@@ -43,17 +46,17 @@ fun MainScreen(
                 .background(JewelTheme.globalColors.borders.normal)
         )
         ImageCreator(
-            title = state.title,
+            title = state.parameters.title,
             onChangedTitle = { onEvent(MainEvent.ChangeTitle(it)) },
-            subTitle = state.subTitle,
+            subTitle = state.parameters.subTitle,
             onChangedSubTitle = {onEvent(MainEvent.ChangeSubTitle(it)) },
-            width = state.width,
+            width = state.parameters.width,
             onChangedWidth = { onEvent(MainEvent.ChangeWidth(it)) },
-            height = state.height,
+            height = state.parameters.height,
             onChangedHeight =  { onEvent(MainEvent.ChangeHeight(it)) },
-            startColor = state.startColor,
+            startColor = state.parameters.startColor,
             onChangedStartColor = { onEvent(MainEvent.ChangeStartColor(it)) },
-            endColor = state.endColor,
+            endColor = state.parameters.endColor,
             onChangedEndColor = { onEvent(MainEvent.ChangeEndColor(it)) },
             onSave = { onEvent(MainEvent.Save) },
             modifier = Modifier.fillMaxHeight().width(400.dp),
@@ -66,12 +69,15 @@ fun MainScreen(
 private fun Preview() {
     MainScreen(
         state = MainState(
-            title = "Hello World",
-            subTitle = "Hello World",
-            width = 1920,
-            height = 1080,
-            startColor = Color.Red,
-            endColor = Color.Blue
+            parameters = Parameters(
+                title = "Hello World",
+                subTitle = "Hello World",
+                width = 1920,
+                height = 1080,
+                startColor = Color.Red.value,
+                endColor = Color.Blue.value
+            ),
+            previewFile = File("")
         ),
         onEvent = {}
     )

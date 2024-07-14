@@ -20,6 +20,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import model.Parameters
+import model.Window
+import model.Window.Companion.toWindow
+import model.Window.Companion.toWindowState
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -33,23 +37,29 @@ import org.jetbrains.jewel.window.DecoratedWindow
 import org.jetbrains.jewel.window.TitleBar
 import org.jetbrains.jewel.window.newFullscreenControls
 import org.jetbrains.jewel.window.styling.TitleBarStyle
-import repository.Window
-import repository.Window.Companion.toWindow
-import repository.Window.Companion.toWindowState
+import repository.ImageRepository
 import repository.WindowRepository
 import view.MainEvent
 import view.MainProcessor
 import view.MainScreen
 import view.MainState
+import java.io.File
 
 val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 val event = MutableSharedFlow<MainEvent>()
+
+// Window
 val windowRepository = WindowRepository()
 val window = windowRepository.get()
+
+// Image
+val imageRepository = ImageRepository()
+
 val stateFlow: Flow<MainState> = scope.launchMolecule(mode = RecompositionMode.Immediate) {
     MainProcessor(
         event = event,
-        windowRepository = windowRepository
+        windowRepository = windowRepository,
+        imageRepository = imageRepository
     )
 }
 
@@ -59,12 +69,15 @@ fun main() = application {
     val windowState by remember(window) { mutableStateOf(window.toWindowState(density)) }
     val state by stateFlow.collectAsState(
         MainState(
-            title = "Hello World",
-            subTitle = "Hello World",
-            width = 1920,
-            height = 1080,
-            startColor = Color.Red,
-            endColor = Color.Blue,
+            parameters = Parameters(
+                title = "Hello World",
+                subTitle = "Hello World",
+                width = 1920,
+                height = 1080,
+                startColor = Color.Red.value,
+                endColor = Color.Blue.value,
+            ),
+            previewFile = File(""),
             isExit = false,
             window = Window()
         )
