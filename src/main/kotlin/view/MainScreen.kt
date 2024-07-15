@@ -8,14 +8,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import model.Parameters
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import view.component.ImageCreator
 import view.component.ImagePreview
-import java.io.File
-import java.util.Date
 
 @Composable
 fun MainScreen(
@@ -44,11 +40,11 @@ fun MainScreen(
             title = state.parameters.title,
             onChangedTitle = { onEvent(MainEvent.ChangeTitle(it)) },
             subTitle = state.parameters.subTitle,
-            onChangedSubTitle = {onEvent(MainEvent.ChangeSubTitle(it)) },
+            onChangedSubTitle = { onEvent(MainEvent.ChangeSubTitle(it)) },
             width = state.parameters.width,
             onChangedWidth = { onEvent(MainEvent.ChangeWidth(it)) },
             height = state.parameters.height,
-            onChangedHeight =  { onEvent(MainEvent.ChangeHeight(it)) },
+            onChangedHeight = { onEvent(MainEvent.ChangeHeight(it)) },
             startColor = state.parameters.startColor,
             onChangedStartColor = { onEvent(MainEvent.ChangeStartColor(it)) },
             endColor = state.parameters.endColor,
@@ -63,19 +59,7 @@ fun MainScreen(
 @Composable
 private fun Preview() {
     MainScreen(
-        state = MainState(
-            parameters = Parameters(
-                title = "Hello World",
-                subTitle = "Hello World",
-                width = 1920,
-                height = 1080,
-                startColor = Color.Red.value,
-                endColor = Color.Blue.value
-            ),
-            previewFile = File(""),
-            previewUpdate = Date().time,
-            isLoading = false
-        ),
+        state = MainState.initValue,
         onEvent = {}
     )
 }

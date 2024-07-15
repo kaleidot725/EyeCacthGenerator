@@ -1,4 +1,5 @@
 <resources>
+    <string name="app">EyeGen</string>
     <string name="category_text">Text</string>
     <string name="title_title">Title</string>
     <string name="subtitle_title">SubTitle</string>

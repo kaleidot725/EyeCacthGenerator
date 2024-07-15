@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import model.Parameters
 import util.OSContext
+import java.awt.Font
 import java.awt.GradientPaint
 import java.awt.image.BufferedImage
 import java.io.File
@@ -49,6 +50,7 @@ class ImageRepository {
                 )
                 imageGraphic.fillRect(0, 0, parameters.width, parameters.height)
                 imageGraphic.color = java.awt.Color.black
+
                 imageGraphic.drawString(parameters.title, 0, 100)
                 imageGraphic.drawString(parameters.subTitle, 0, 200)
                 ImageIO.write(output, "PNG", outputFile)
