@@ -80,6 +80,7 @@ fun main() = application {
             ),
             previewFile = File(""),
             previewUpdate = Date().time,
+            isLoading = false,
             isExit = false,
             window = Window()
         )

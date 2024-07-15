@@ -7,18 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.cash.molecule.RecompositionMode
-import app.cash.molecule.launchMolecule
-import com.sun.tools.javac.Main
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import model.Parameters
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import view.component.ImageCreator
@@ -38,6 +29,7 @@ fun MainScreen(
         ImagePreview(
             file = state.previewFile,
             date = state.previewUpdate,
+            isLoading = state.isLoading,
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1.0f)
@@ -61,7 +53,6 @@ fun MainScreen(
             onChangedStartColor = { onEvent(MainEvent.ChangeStartColor(it)) },
             endColor = state.parameters.endColor,
             onChangedEndColor = { onEvent(MainEvent.ChangeEndColor(it)) },
-            onPreview = { onEvent(MainEvent.Preview ) },
             onSave = { onEvent(MainEvent.Save) },
             modifier = Modifier.fillMaxHeight().width(400.dp),
         )
@@ -82,7 +73,8 @@ private fun Preview() {
                 endColor = Color.Blue.value
             ),
             previewFile = File(""),
-            previewUpdate = Date().time
+            previewUpdate = Date().time,
+            isLoading = false
         ),
         onEvent = {}
     )

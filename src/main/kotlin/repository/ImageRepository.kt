@@ -41,6 +41,7 @@ class ImageRepository {
                 val graphics = output.graphics
                 graphics.color = awtColor
                 graphics.fillRect(0, 0, parameters.width, parameters.height)
+                graphics.color = java.awt.Color.black
                 graphics.drawString(parameters.title, 0, 100)
                 graphics.drawString(parameters.subTitle, 0, 200)
                 graphics.dispose()
