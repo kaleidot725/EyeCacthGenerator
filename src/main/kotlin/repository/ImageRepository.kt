@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import model.Parameters
 import util.OSContext
+import java.awt.GradientPaint
 import java.awt.image.BufferedImage
 import java.io.File
 import java.io.IOException
@@ -30,21 +31,26 @@ class ImageRepository {
             }
 
             try {
+                val startColor = Color(parameters.startColor)
+                val endColor = Color(parameters.endColor)
                 val output = BufferedImage(
                     parameters.width,
                     parameters.height,
                     BufferedImage.TYPE_INT_ARGB
                 )
-
-                val color = Color(parameters.startColor)
-                val awtColor = java.awt.Color(color.red, color.green, color.blue, color.alpha)
-                val graphics = output.graphics
-                graphics.color = awtColor
-                graphics.fillRect(0, 0, parameters.width, parameters.height)
-                graphics.color = java.awt.Color.black
-                graphics.drawString(parameters.title, 0, 100)
-                graphics.drawString(parameters.subTitle, 0, 200)
-                graphics.dispose()
+                val imageGraphic = output.createGraphics()
+                imageGraphic.paint = GradientPaint(
+                    0f,
+                    0f,
+                    startColor.toAwtColor(),
+                    parameters.width.toFloat(),
+                    parameters.height.toFloat(),
+                    endColor.toAwtColor()
+                )
+                imageGraphic.fillRect(0, 0, parameters.width, parameters.height)
+                imageGraphic.color = java.awt.Color.black
+                imageGraphic.drawString(parameters.title, 0, 100)
+                imageGraphic.drawString(parameters.subTitle, 0, 200)
                 ImageIO.write(output, "PNG", outputFile)
                 outputFile
             } catch (e: IOException) {
@@ -55,5 +61,9 @@ class ImageRepository {
 
     suspend fun createFileToDesktop(parameters: Parameters): Boolean {
         return false
+    }
+
+    private fun Color.toAwtColor() : java.awt.Color {
+        return java.awt.Color(red, green, blue, alpha)
     }
 }
