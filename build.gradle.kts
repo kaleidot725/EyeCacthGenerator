@@ -23,7 +23,7 @@ dependencies {
     }
     implementation("org.jetbrains.jewel:jewel-int-ui-standalone-241:0.18.1")
     implementation("org.jetbrains.jewel:jewel-int-ui-decorated-window-241:0.18.1")
-    implementation("com.github.skydoves:colorpicker-compose:1.1.1")
+    implementation("com.github.skydoves:colorpicker-compose:1.1.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
     implementation("app.cash.molecule:molecule-runtime:2.0.0")
