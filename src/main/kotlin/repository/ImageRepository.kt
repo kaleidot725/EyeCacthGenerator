@@ -13,6 +13,7 @@ import java.io.IOException
 import java.nio.file.Files
 import javax.imageio.ImageIO
 
+
 class ImageRepository {
     private val outputDirectory = File(OSContext.resolveOSContext().directory, "temp")
     private val outputFile = File(outputDirectory, "preview.png")
@@ -51,11 +52,23 @@ class ImageRepository {
                 imageGraphic.fillRect(0, 0, parameters.width, parameters.height)
                 imageGraphic.color = java.awt.Color.black
 
-                imageGraphic.font = Font(parameters.titleFont.value, Font.PLAIN, 48)
-                imageGraphic.drawString(parameters.title, 0, 100)
+                val titleFont = Font(parameters.titleFont.value, Font.PLAIN, 48)
+                val titleWidth = getWidth(titleFont, parameters.title)
+                val titleHeight = getHeight(titleFont)
+                val titleX = getCenterX(maxWidth = parameters.width, textWidth = titleWidth)
+                val titleY = getCenterY(maxHeight = parameters.height, textHeight = titleHeight)
 
-                imageGraphic.font = Font(parameters.subTitleFont.value, Font.PLAIN, 48)
-                imageGraphic.drawString(parameters.subTitle, 0, 200)
+                imageGraphic.font = titleFont
+                imageGraphic.drawString(parameters.title, titleX, titleY)
+
+                val subTitleFont = Font(parameters.subTitleFont.value, Font.PLAIN, 48)
+                val subTitleWidth = getWidth(subTitleFont, parameters.subTitle)
+                val subTitleHeight = getHeight(subTitleFont)
+                val subTitleX = getCenterX(maxWidth = parameters.width, textWidth = subTitleWidth)
+                val subTitleY = getCenterY(maxHeight = parameters.height, textHeight = subTitleHeight) + titleHeight
+
+                imageGraphic.font = subTitleFont
+                imageGraphic.drawString(parameters.subTitle, subTitleX, subTitleY)
 
                 ImageIO.write(output, "PNG", outputFile)
                 outputFile
@@ -71,5 +84,25 @@ class ImageRepository {
 
     private fun Color.toAwtColor(): java.awt.Color {
         return java.awt.Color(red, green, blue, alpha)
+    }
+
+    private fun getHeight(font: Font): Int {
+        val output = BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
+        val imageGraphic = output.createGraphics().apply { this.font = font }
+        return imageGraphic.fontMetrics.height.apply { imageGraphic.dispose() }
+    }
+
+    private fun getWidth(font: Font, text: String): Int {
+        val output = BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)
+        val imageGraphic = output.createGraphics().apply { this.font = font }
+        return imageGraphic.fontMetrics.stringWidth(text).apply { imageGraphic.dispose() }
+    }
+
+    private fun getCenterX(maxWidth: Int, textWidth: Int): Int {
+        return maxWidth / 2 - textWidth / 2
+    }
+
+    private fun getCenterY(maxHeight: Int, textHeight: Int): Int {
+        return maxHeight / 2 - textHeight / 2
     }
 }
