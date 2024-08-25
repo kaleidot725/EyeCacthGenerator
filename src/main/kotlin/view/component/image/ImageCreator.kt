@@ -1,4 +1,4 @@
-package view.component
+package view.component.image
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
@@ -47,6 +47,8 @@ import org.jetbrains.jewel.ui.component.DefaultButton
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
 import org.jetbrains.jewel.ui.util.toRgbaHexString
+import view.component.base.ParameterContent
+import view.component.base.TitleText
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

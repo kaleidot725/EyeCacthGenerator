@@ -1,4 +1,4 @@
-package view.component
+package view.component.image
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Dropdown
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
+import view.component.base.ParameterContent
+import view.component.base.TitleText
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable

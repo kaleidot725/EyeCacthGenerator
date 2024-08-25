@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.jewel.foundation.theme.JewelTheme
-import view.component.ImageCreator
-import view.component.ImagePreview
+import view.component.image.ImageCreator
+import view.component.image.ImagePreview
 
 @Composable
 fun MainScreen(

@@ -1,4 +1,4 @@
-package view.component
+package view.component.base
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
