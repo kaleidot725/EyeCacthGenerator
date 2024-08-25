@@ -1,14 +1,17 @@
-package view.component.image
+package view.component.image.editor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_font
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text_size
 import model.Font
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
@@ -26,9 +29,14 @@ fun ImageTextEditor(
     onChangedText: (String) -> Unit,
     font: Font,
     onChangedFont: (Font) -> Unit,
+    size: Int,
+    onChangedSize: (Int) -> Unit,
     allFonts: List<Font>,
     modifier: Modifier = Modifier
 ) {
+    val localText by rememberUpdatedState(text)
+    val localSize by rememberUpdatedState(size)
+
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TitleText(
             text = label,
@@ -39,7 +47,7 @@ fun ImageTextEditor(
             label = stringResource(Res.string.text_parameter_text)
         ) {
             TextField(
-                value = text,
+                value = localText,
                 onValueChange = onChangedText,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -62,6 +70,18 @@ fun ImageTextEditor(
                 content = {
                     Text(font.value)
                 },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        ParameterContent(
+            label = stringResource(Res.string.text_parameter_text_size)
+        ) {
+            // 明日から始めるJetpack Compose入門
+            // 基本編
+            TextField(
+                value = localSize.toString(),
+                onValueChange = { onChangedSize(it.toIntOrNull() ?: 0) },
                 modifier = Modifier.fillMaxWidth()
             )
         }

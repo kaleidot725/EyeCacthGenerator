@@ -1,4 +1,4 @@
-package view.component.image
+package view.component.image.editor
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
@@ -41,6 +41,7 @@ import jp.kaleidot725.eyegen.eyegen.generated.resources.subtitle_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.title_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.width_title
 import model.Font
+import model.Parameters
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.DefaultButton
@@ -53,21 +54,16 @@ import view.component.base.TitleText
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ImageCreator(
-    title: String,
+    parameters: Parameters,
     onChangedTitle: (String) -> Unit,
-    titleFont: Font,
     onChangedTitleFont: (Font) -> Unit,
-    subTitle: String,
+    onChangedTitleSize: (Int) -> Unit,
     onChangedSubTitle: (String) -> Unit,
-    subTitleFont: Font,
     onChangedSubTitleFont: (Font) -> Unit,
-    width: Int,
+    onChangedSubTitleSize: (Int) -> Unit,
     onChangedWidth: (Int) -> Unit,
-    height: Int,
     onChangedHeight: (Int) -> Unit,
-    startColor: ULong,
     onChangedStartColor: (ULong) -> Unit,
-    endColor: ULong,
     onChangedEndColor: (ULong) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
@@ -87,20 +83,24 @@ fun ImageCreator(
     ) {
         ImageTextEditor(
             label = stringResource(Res.string.title_title),
-            text = title,
+            text = parameters.title,
             onChangedText = onChangedTitle,
-            font = titleFont,
+            font = parameters.titleFont,
             onChangedFont = onChangedTitleFont,
+            size = parameters.titleSize,
+            onChangedSize = onChangedTitleSize,
             allFonts = allFonts,
             modifier = Modifier.fillMaxWidth()
         )
 
         ImageTextEditor(
             label = stringResource(Res.string.subtitle_title),
-            text = subTitle,
+            text = parameters.subTitle,
             onChangedText = onChangedSubTitle,
-            font = subTitleFont,
+            font = parameters.subTitleFont,
             onChangedFont = onChangedSubTitleFont,
+            size = parameters.subTitleSize,
+            onChangedSize = onChangedSubTitleSize,
             allFonts = allFonts
         )
 
@@ -110,7 +110,7 @@ fun ImageCreator(
             label = stringResource(Res.string.width_title)
         ) {
             TextField(
-                value = width.toString(),
+                value = parameters.width.toString(),
                 onValueChange = { onChangedWidth(it.toIntOrNull() ?: 0) },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -120,7 +120,7 @@ fun ImageCreator(
             label = stringResource(Res.string.height_title)
         ) {
             TextField(
-                value = height.toString(),
+                value = parameters.height.toString(),
                 onValueChange = { onChangedHeight(it.toIntOrNull() ?: 0) },
                 modifier = Modifier.fillMaxWidth()
             )
@@ -134,7 +134,7 @@ fun ImageCreator(
             Box(
                 modifier = Modifier
                     .size(20.dp)
-                    .background(Color(startColor), CircleShape)
+                    .background(Color(parameters.startColor), CircleShape)
                     .align(Alignment.CenterVertically)
             )
 
@@ -144,14 +144,14 @@ fun ImageCreator(
             )
 
             TextField(
-                value = Color(startColor).toRgbaHexString(),
+                value = Color(parameters.startColor).toRgbaHexString(),
                 onValueChange = {},
                 modifier = Modifier
                     .weight(1.0f)
                     .align(Alignment.CenterVertically)
                     .onFocusChanged { state ->
                         selectedStartColor = state.hasFocus
-                        if (selectedStartColor) controller.selectByColor(Color(startColor), true)
+                        if (selectedStartColor) controller.selectByColor(Color(parameters.startColor), true)
                     }
             )
         }
@@ -162,7 +162,7 @@ fun ImageCreator(
             Box(
                 modifier = Modifier
                     .size(20.dp)
-                    .background(Color(endColor), CircleShape)
+                    .background(Color(parameters.endColor), CircleShape)
                     .align(Alignment.CenterVertically)
             )
 
@@ -172,14 +172,14 @@ fun ImageCreator(
             )
 
             TextField(
-                value = Color(endColor).toRgbaHexString(),
+                value = Color(parameters.endColor).toRgbaHexString(),
                 onValueChange = {},
                 modifier = Modifier
                     .weight(1.0f)
                     .align(Alignment.CenterVertically)
                     .onFocusChanged { state ->
                         selectedEndColor = state.hasFocus
-                        if (selectedEndColor) controller.selectByColor(Color(endColor), true)
+                        if (selectedEndColor) controller.selectByColor(Color(parameters.endColor), true)
                     }
             )
         }
@@ -233,21 +233,16 @@ fun ImageCreator(
 private fun Preview() {
     Box(modifier = Modifier.size(500.dp)) {
         ImageCreator(
-            title = "",
+            parameters = Parameters.initValue,
             onChangedTitle = {},
-            titleFont = Font("TEST"),
             onChangedTitleFont = {},
-            subTitle = "",
+            onChangedTitleSize = {},
             onChangedSubTitle = {},
-            subTitleFont = Font("TEST"),
             onChangedSubTitleFont = {},
-            width = 0,
+            onChangedSubTitleSize = {},
             onChangedWidth = {},
-            height = 0,
             onChangedHeight = {},
-            startColor = Color.Red.value,
             onChangedStartColor = {},
-            endColor = Color.Blue.value,
             onChangedEndColor = {},
             onSave = {},
             allFonts = emptyList(),

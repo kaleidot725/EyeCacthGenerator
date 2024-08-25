@@ -52,7 +52,7 @@ class ImageRepository {
                 imageGraphic.fillRect(0, 0, parameters.width, parameters.height)
                 imageGraphic.color = java.awt.Color.black
 
-                val titleFont = Font(parameters.titleFont.value, Font.PLAIN, 48)
+                val titleFont = Font(parameters.titleFont.value, Font.PLAIN, parameters.titleSize)
                 val titleWidth = getWidth(titleFont, parameters.title)
                 val titleHeight = getHeight(titleFont)
                 val titleX = getCenterX(maxWidth = parameters.width, textWidth = titleWidth)
@@ -61,7 +61,7 @@ class ImageRepository {
                 imageGraphic.font = titleFont
                 imageGraphic.drawString(parameters.title, titleX, titleY)
 
-                val subTitleFont = Font(parameters.subTitleFont.value, Font.PLAIN, 48)
+                val subTitleFont = Font(parameters.subTitleFont.value, Font.PLAIN, parameters.subTitleSize)
                 val subTitleWidth = getWidth(subTitleFont, parameters.subTitle)
                 val subTitleHeight = getHeight(subTitleFont)
                 val subTitleX = getCenterX(maxWidth = parameters.width, textWidth = subTitleWidth)

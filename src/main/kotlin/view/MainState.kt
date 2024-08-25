@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -32,16 +31,7 @@ data class MainState(
 ) {
     companion object {
         val initValue = MainState(
-            parameters = Parameters(
-                title = "Hello World",
-                titleFont = Font("Arial"),
-                subTitle = "Hello World",
-                subTitleFont = Font("Arial"),
-                width = 1920,
-                height = 1080,
-                startColor = Color.Red.value,
-                endColor = Color.Blue.value,
-            ),
+            parameters = Parameters.initValue,
             previewFile = File(""),
             previewUpdate = Date().time,
             isLoading = false,
@@ -55,8 +45,10 @@ data class MainState(
 sealed interface MainEvent {
     data class ChangeTitle(val value: String) : MainEvent
     data class ChangeTitleFont(val value: Font) : MainEvent
+    data class ChangeTitleSize(val value: Int) : MainEvent
     data class ChangeSubTitle(val value: String) : MainEvent
     data class ChangeSubTitleFont(val value: Font) : MainEvent
+    data class ChangeSubTitleSize(val value: Int) : MainEvent
     data class ChangeWidth(val value: Int) : MainEvent
     data class ChangeHeight(val value: Int) : MainEvent
     data class ChangeStartColor(val color: ULong) : MainEvent
@@ -73,20 +65,7 @@ fun MainProcessor(
     fontRepository: FontRepository,
 ): MainState {
     val scope = rememberCoroutineScope()
-    var parameters by remember {
-        mutableStateOf(
-            Parameters(
-                title = "TITLE",
-                titleFont = Font("Arial"),
-                subTitle = "SubTitle",
-                subTitleFont = Font("Arial"),
-                width = 1000,
-                height = 1000,
-                startColor = Color.Red.value,
-                endColor = Color.Blue.value
-            )
-        )
-    }
+    var parameters by remember { mutableStateOf(Parameters.initValue) }
     var previewFile by remember { mutableStateOf(File("")) }
     var previewUpdate by remember { mutableStateOf(0L) }
     var previewJob by remember { mutableStateOf<Job?>(null) }
@@ -118,6 +97,11 @@ fun MainProcessor(
                     createPreviewFile()
                 }
 
+                is MainEvent.ChangeTitleSize -> {
+                    parameters = parameters.copy(titleSize = event.value)
+                    createPreviewFile()
+                }
+
                 is MainEvent.ChangeSubTitle -> {
                     parameters = parameters.copy(subTitle = event.value)
                     createPreviewFile()
@@ -125,6 +109,11 @@ fun MainProcessor(
 
                 is MainEvent.ChangeSubTitleFont -> {
                     parameters = parameters.copy(subTitleFont = event.value)
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeSubTitleSize -> {
+                    parameters = parameters.copy(subTitleSize = event.value)
                     createPreviewFile()
                 }
 
