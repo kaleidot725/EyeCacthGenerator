@@ -2,7 +2,16 @@ package view.component
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,7 +33,6 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
 import jp.kaleidot725.eyegen.eyegen.generated.resources.category_color
 import jp.kaleidot725.eyegen.eyegen.generated.resources.category_size
-import jp.kaleidot725.eyegen.eyegen.generated.resources.category_text
 import jp.kaleidot725.eyegen.eyegen.generated.resources.end_color_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.height_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.save
@@ -32,6 +40,7 @@ import jp.kaleidot725.eyegen.eyegen.generated.resources.start_color_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.subtitle_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.title_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.width_title
+import model.Font
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.DefaultButton
@@ -44,8 +53,12 @@ import org.jetbrains.jewel.ui.util.toRgbaHexString
 fun ImageCreator(
     title: String,
     onChangedTitle: (String) -> Unit,
+    titleFont: Font,
+    onChangedTitleFont: (Font) -> Unit,
     subTitle: String,
     onChangedSubTitle: (String) -> Unit,
+    subTitleFont: Font,
+    onChangedSubTitleFont: (Font) -> Unit,
     width: Int,
     onChangedWidth: (Int) -> Unit,
     height: Int,
@@ -56,8 +69,9 @@ fun ImageCreator(
     onChangedEndColor: (ULong) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
+    allFonts: List<Font>
 ) {
-    val controller : ColorPickerController = rememberColorPickerController()
+    val controller: ColorPickerController = rememberColorPickerController()
     var selectedStartColor by remember { mutableStateOf(false) }
     var selectedEndColor by remember { mutableStateOf(false) }
 
@@ -69,67 +83,44 @@ fun ImageCreator(
         modifier = modifier.padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TitleText(stringResource(Res.string.category_text))
+        ImageTextEditor(
+            label = stringResource(Res.string.title_title),
+            text = title,
+            onChangedText = onChangedTitle,
+            font = titleFont,
+            onChangedFont = onChangedTitleFont,
+            allFonts = allFonts,
+            modifier = Modifier.fillMaxWidth()
+        )
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = stringResource(Res.string.title_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
-            )
-
-            TextField(
-                value = title,
-                onValueChange = onChangedTitle,
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
-            )
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(
-                text = stringResource(Res.string.subtitle_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
-            )
-
-            TextField(
-                value = subTitle,
-                onValueChange = onChangedSubTitle,
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
-            )
-        }
+        ImageTextEditor(
+            label = stringResource(Res.string.subtitle_title),
+            text = subTitle,
+            onChangedText = onChangedSubTitle,
+            font = subTitleFont,
+            onChangedFont = onChangedSubTitleFont,
+            allFonts = allFonts
+        )
 
         TitleText(stringResource(Res.string.category_size))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ParameterContent(
+            label = stringResource(Res.string.width_title)
         ) {
-            Text(
-                text = stringResource(Res.string.width_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
-            )
-
             TextField(
                 value = width.toString(),
                 onValueChange = { onChangedWidth(it.toIntOrNull() ?: 0) },
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ParameterContent(
+            label = stringResource(Res.string.height_title)
         ) {
-            Text(
-                text = stringResource(Res.string.height_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
-            )
-
             TextField(
                 value = height.toString(),
-                onValueChange = { onChangedHeight(it.toIntOrNull() ?: 0)},
-                modifier = Modifier.weight(1.0f).align(Alignment.CenterVertically)
+                onValueChange = { onChangedHeight(it.toIntOrNull() ?: 0) },
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -138,10 +129,11 @@ fun ImageCreator(
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Box(modifier = Modifier
-                .size(20.dp)
-                .background(Color(startColor), CircleShape)
-                .align(Alignment.CenterVertically)
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(Color(startColor), CircleShape)
+                    .align(Alignment.CenterVertically)
             )
 
             Text(
@@ -165,10 +157,11 @@ fun ImageCreator(
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Box(modifier = Modifier
-                .size(20.dp)
-                .background(Color(endColor), CircleShape)
-                .align(Alignment.CenterVertically)
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .background(Color(endColor), CircleShape)
+                    .align(Alignment.CenterVertically)
             )
 
             Text(
@@ -240,8 +233,12 @@ private fun Preview() {
         ImageCreator(
             title = "",
             onChangedTitle = {},
+            titleFont = Font("TEST"),
+            onChangedTitleFont = {},
             subTitle = "",
             onChangedSubTitle = {},
+            subTitleFont = Font("TEST"),
+            onChangedSubTitleFont = {},
             width = 0,
             onChangedWidth = {},
             height = 0,
@@ -251,6 +248,7 @@ private fun Preview() {
             endColor = Color.Blue.value,
             onChangedEndColor = {},
             onSave = {},
+            allFonts = emptyList(),
             modifier = Modifier
         )
     }

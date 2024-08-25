@@ -51,8 +51,12 @@ class ImageRepository {
                 imageGraphic.fillRect(0, 0, parameters.width, parameters.height)
                 imageGraphic.color = java.awt.Color.black
 
+                imageGraphic.font = Font(parameters.titleFont.value, Font.PLAIN, 48)
                 imageGraphic.drawString(parameters.title, 0, 100)
+
+                imageGraphic.font = Font(parameters.subTitleFont.value, Font.PLAIN, 48)
                 imageGraphic.drawString(parameters.subTitle, 0, 200)
+
                 ImageIO.write(output, "PNG", outputFile)
                 outputFile
             } catch (e: IOException) {
@@ -65,7 +69,7 @@ class ImageRepository {
         return false
     }
 
-    private fun Color.toAwtColor() : java.awt.Color {
+    private fun Color.toAwtColor(): java.awt.Color {
         return java.awt.Color(red, green, blue, alpha)
     }
 }

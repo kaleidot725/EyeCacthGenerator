@@ -39,8 +39,12 @@ fun MainScreen(
         ImageCreator(
             title = state.parameters.title,
             onChangedTitle = { onEvent(MainEvent.ChangeTitle(it)) },
+            titleFont = state.parameters.titleFont,
+            onChangedTitleFont = { onEvent(MainEvent.ChangeTitleFont(it)) },
             subTitle = state.parameters.subTitle,
             onChangedSubTitle = { onEvent(MainEvent.ChangeSubTitle(it)) },
+            subTitleFont = state.parameters.subTitleFont,
+            onChangedSubTitleFont = { onEvent(MainEvent.ChangeSubTitleFont(it)) },
             width = state.parameters.width,
             onChangedWidth = { onEvent(MainEvent.ChangeWidth(it)) },
             height = state.parameters.height,
@@ -50,6 +54,7 @@ fun MainScreen(
             endColor = state.parameters.endColor,
             onChangedEndColor = { onEvent(MainEvent.ChangeEndColor(it)) },
             onSave = { onEvent(MainEvent.Save) },
+            allFonts = state.fonts,
             modifier = Modifier.fillMaxHeight().width(400.dp),
         )
     }

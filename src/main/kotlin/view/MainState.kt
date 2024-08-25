@@ -34,7 +34,9 @@ data class MainState(
         val initValue = MainState(
             parameters = Parameters(
                 title = "Hello World",
+                titleFont = Font("Arial"),
                 subTitle = "Hello World",
+                subTitleFont = Font("Arial"),
                 width = 1920,
                 height = 1080,
                 startColor = Color.Red.value,
@@ -52,7 +54,9 @@ data class MainState(
 
 sealed interface MainEvent {
     data class ChangeTitle(val value: String) : MainEvent
+    data class ChangeTitleFont(val value: Font) : MainEvent
     data class ChangeSubTitle(val value: String) : MainEvent
+    data class ChangeSubTitleFont(val value: Font) : MainEvent
     data class ChangeWidth(val value: Int) : MainEvent
     data class ChangeHeight(val value: Int) : MainEvent
     data class ChangeStartColor(val color: ULong) : MainEvent
@@ -73,7 +77,9 @@ fun MainProcessor(
         mutableStateOf(
             Parameters(
                 title = "TITLE",
+                titleFont = Font("Arial"),
                 subTitle = "SubTitle",
+                subTitleFont = Font("Arial"),
                 width = 1000,
                 height = 1000,
                 startColor = Color.Red.value,
@@ -107,8 +113,18 @@ fun MainProcessor(
                     createPreviewFile()
                 }
 
+                is MainEvent.ChangeTitleFont -> {
+                    parameters = parameters.copy(titleFont = event.value)
+                    createPreviewFile()
+                }
+
                 is MainEvent.ChangeSubTitle -> {
                     parameters = parameters.copy(subTitle = event.value)
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeSubTitleFont -> {
+                    parameters = parameters.copy(subTitleFont = event.value)
                     createPreviewFile()
                 }
 
@@ -140,6 +156,7 @@ fun MainProcessor(
                     windowRepository.update(event.window)
                     isExit = true
                 }
+
             }
         }
     }
