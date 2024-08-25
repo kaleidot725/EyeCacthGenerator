@@ -6,11 +6,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_font
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text
 import model.Font
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Dropdown
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ImageTextEditor(
     label: String,
@@ -28,7 +34,7 @@ fun ImageTextEditor(
         )
 
         ParameterContent(
-            label = "Text"
+            label = stringResource(Res.string.text_parameter_text)
         ) {
             TextField(
                 value = text,
@@ -38,7 +44,7 @@ fun ImageTextEditor(
         }
 
         ParameterContent(
-            label = "Font"
+            label = stringResource(Res.string.text_parameter_font)
         ) {
             Dropdown(
                 menuContent = {

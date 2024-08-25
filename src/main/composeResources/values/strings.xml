@@ -4,6 +4,10 @@
     <string name="title_title">Title</string>
     <string name="subtitle_title">SubTitle</string>
 
+    <string name="text_parameter_text">Text</string>
+    <string name="text_parameter_font">Font</string>
+    <string name="text_parameter_text_size">Size</string>
+
     <string name="category_size">Size</string>
     <string name="width_title">Width</string>
     <string name="height_title">Height</string>
