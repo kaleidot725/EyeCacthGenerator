@@ -14,6 +14,14 @@ data class Parameters(
     val startColor: ULong,
     val endColor: ULong,
 ) {
+    val isValid: Boolean
+        get() {
+            return width != null &&
+                width != 0 &&
+                height != null &&
+                height != 0
+        }
+
     companion object {
         val initValue =
             Parameters(

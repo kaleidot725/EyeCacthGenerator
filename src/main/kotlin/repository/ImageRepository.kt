@@ -32,59 +32,63 @@ class ImageRepository {
                 println(e)
             }
 
-            try {
-                val startColor = Color(parameters.startColor)
-                val endColor = Color(parameters.endColor)
-                val output =
-                    BufferedImage(
-                        parameters.width ?: 0,
-                        parameters.height ?: 0,
-                        BufferedImage.TYPE_INT_ARGB,
-                    )
-                val imageGraphic = output.createGraphics()
-                imageGraphic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-                imageGraphic.paint =
-                    GradientPaint(
-                        0f,
-                        0f,
-                        startColor.toAwtColor(),
-                        parameters.width?.toFloat() ?: 0f,
-                        parameters.height?.toFloat() ?: 0f,
-                        endColor.toAwtColor(),
-                    )
-                imageGraphic.fillRect(0, 0, parameters.width ?: 0, parameters.height ?: 0)
-                imageGraphic.color = java.awt.Color.black
+            if (parameters.isValid) {
+                try {
+                    val startColor = Color(parameters.startColor)
+                    val endColor = Color(parameters.endColor)
+                    val output =
+                        BufferedImage(
+                            parameters.width ?: 0,
+                            parameters.height ?: 0,
+                            BufferedImage.TYPE_INT_ARGB,
+                        )
+                    val imageGraphic = output.createGraphics()
+                    imageGraphic.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+                    imageGraphic.paint =
+                        GradientPaint(
+                            0f,
+                            0f,
+                            startColor.toAwtColor(),
+                            parameters.width?.toFloat() ?: 0f,
+                            parameters.height?.toFloat() ?: 0f,
+                            endColor.toAwtColor(),
+                        )
+                    imageGraphic.fillRect(0, 0, parameters.width ?: 0, parameters.height ?: 0)
+                    imageGraphic.color = java.awt.Color.black
 
-                val titleFont = Font(parameters.titleFont.value, Font.PLAIN, parameters.titleSize ?: 0)
-                val titleWidth = getWidth(titleFont, parameters.title)
-                val titleHeight = getHeight(titleFont)
-                val titleX = getCenterX(maxWidth = parameters.width ?: 0, textWidth = titleWidth)
-                val titleY = getCenterY(maxHeight = parameters.height ?: 0, textHeight = titleHeight)
+                    val titleFont = Font(parameters.titleFont.value, Font.PLAIN, parameters.titleSize ?: 0)
+                    val titleWidth = getWidth(titleFont, parameters.title)
+                    val titleHeight = getHeight(titleFont)
+                    val titleX = getCenterX(maxWidth = parameters.width ?: 0, textWidth = titleWidth)
+                    val titleY = getCenterY(maxHeight = parameters.height ?: 0, textHeight = titleHeight)
 
-                imageGraphic.font = titleFont
-                imageGraphic.drawString(parameters.title, titleX, titleY)
+                    imageGraphic.font = titleFont
+                    imageGraphic.drawString(parameters.title, titleX, titleY)
 
-                val subTitleFont = Font(parameters.subTitleFont.value, Font.PLAIN, parameters.subTitleSize ?: 0)
-                val subTitleWidth = getWidth(subTitleFont, parameters.subTitle)
-                val subTitleHeight = getHeight(subTitleFont)
-                val subTitleX =
-                    getCenterX(
-                        maxWidth = parameters.width ?: 0,
-                        textWidth = subTitleWidth,
-                    )
-                val subTitleY =
-                    getCenterY(
-                        maxHeight = parameters.height ?: 0,
-                        textHeight = subTitleHeight,
-                    ) + titleHeight
+                    val subTitleFont = Font(parameters.subTitleFont.value, Font.PLAIN, parameters.subTitleSize ?: 0)
+                    val subTitleWidth = getWidth(subTitleFont, parameters.subTitle)
+                    val subTitleHeight = getHeight(subTitleFont)
+                    val subTitleX =
+                        getCenterX(
+                            maxWidth = parameters.width ?: 0,
+                            textWidth = subTitleWidth,
+                        )
+                    val subTitleY =
+                        getCenterY(
+                            maxHeight = parameters.height ?: 0,
+                            textHeight = subTitleHeight,
+                        ) + titleHeight
 
-                imageGraphic.font = subTitleFont
-                imageGraphic.drawString(parameters.subTitle, subTitleX, subTitleY)
+                    imageGraphic.font = subTitleFont
+                    imageGraphic.drawString(parameters.subTitle, subTitleX, subTitleY)
 
-                ImageIO.write(output, "PNG", outputFile)
-                outputFile
-            } catch (e: IOException) {
-                outputFile
+                    ImageIO.write(output, "PNG", outputFile)
+                    outputFile
+                } catch (e: IOException) {
+                    outputFile
+                }
+            } else {
+                File("")
             }
         }
 
