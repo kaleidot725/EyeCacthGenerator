@@ -27,34 +27,68 @@ data class MainState(
     val isLoading: Boolean,
     val fonts: List<Font>,
     val window: Window? = null,
-    val isExit: Boolean = false
+    val isExit: Boolean = false,
 ) {
     companion object {
-        val initValue = MainState(
-            parameters = Parameters.initValue,
-            previewFile = File(""),
-            previewUpdate = Date().time,
-            isLoading = false,
-            fonts = emptyList(),
-            isExit = false,
-            window = Window()
-        )
+        val initValue =
+            MainState(
+                parameters = Parameters.initValue,
+                previewFile = File(""),
+                previewUpdate = Date().time,
+                isLoading = false,
+                fonts = emptyList(),
+                isExit = false,
+                window = Window(),
+            )
     }
 }
 
 sealed interface MainEvent {
-    data class ChangeTitle(val value: String) : MainEvent
-    data class ChangeTitleFont(val value: Font) : MainEvent
-    data class ChangeTitleSize(val value: Int) : MainEvent
-    data class ChangeSubTitle(val value: String) : MainEvent
-    data class ChangeSubTitleFont(val value: Font) : MainEvent
-    data class ChangeSubTitleSize(val value: Int) : MainEvent
-    data class ChangeWidth(val value: Int) : MainEvent
-    data class ChangeHeight(val value: Int) : MainEvent
-    data class ChangeStartColor(val color: ULong) : MainEvent
-    data class ChangeEndColor(val color: ULong) : MainEvent
+    data class ChangeTitle(
+        val value: String,
+    ) : MainEvent
+
+    data class ChangeTitleFont(
+        val value: Font,
+    ) : MainEvent
+
+    data class ChangeTitleSize(
+        val value: Int?,
+    ) : MainEvent
+
+    data class ChangeSubTitle(
+        val value: String,
+    ) : MainEvent
+
+    data class ChangeSubTitleFont(
+        val value: Font,
+    ) : MainEvent
+
+    data class ChangeSubTitleSize(
+        val value: Int?,
+    ) : MainEvent
+
+    data class ChangeWidth(
+        val value: Int?,
+    ) : MainEvent
+
+    data class ChangeHeight(
+        val value: Int?,
+    ) : MainEvent
+
+    data class ChangeStartColor(
+        val color: ULong,
+    ) : MainEvent
+
+    data class ChangeEndColor(
+        val color: ULong,
+    ) : MainEvent
+
     data object Save : MainEvent
-    data class Destroy(val window: Window) : MainEvent
+
+    data class Destroy(
+        val window: Window,
+    ) : MainEvent
 }
 
 @Composable
@@ -75,12 +109,13 @@ fun MainProcessor(
 
     fun createPreviewFile() {
         previewJob?.cancel()
-        previewJob = scope.launch {
-            delay(100)
-            previewFile = imageRepository.createPreview(parameters)
-            previewUpdate = Date().time
-            previewJob = null
-        }
+        previewJob =
+            scope.launch {
+                delay(100)
+                previewFile = imageRepository.createPreview(parameters)
+                previewUpdate = Date().time
+                previewJob = null
+            }
     }
 
     LaunchedEffect(Unit) {
@@ -145,7 +180,6 @@ fun MainProcessor(
                     windowRepository.update(event.window)
                     isExit = true
                 }
-
             }
         }
     }
@@ -161,6 +195,6 @@ fun MainProcessor(
         isLoading = previewJob != null,
         fonts = fonts,
         window = window,
-        isExit = isExit
+        isExit = isExit,
     )
 }

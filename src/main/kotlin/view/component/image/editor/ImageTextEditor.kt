@@ -31,20 +31,20 @@ fun ImageTextEditor(
     onChangedText: (String) -> Unit,
     font: Font,
     onChangedFont: (Font) -> Unit,
-    size: Int,
-    onChangedSize: (Int) -> Unit,
+    size: Int?,
+    onChangedSize: (Int?) -> Unit,
     allFonts: List<Font>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var localText by remember { mutableStateOf(text) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TitleText(
             text = label,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         ParameterContent(
-            label = stringResource(Res.string.text_parameter_text)
+            label = stringResource(Res.string.text_parameter_text),
         ) {
             TextField(
                 value = localText,
@@ -52,19 +52,19 @@ fun ImageTextEditor(
                     localText = it
                     onChangedText(it)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
         ParameterContent(
-            label = stringResource(Res.string.text_parameter_font)
+            label = stringResource(Res.string.text_parameter_font),
         ) {
             Dropdown(
                 menuContent = {
                     allFonts.forEach {
                         selectableItem(
                             selected = it == font,
-                            onClick = { onChangedFont(it) }
+                            onClick = { onChangedFont(it) },
                         ) {
                             Text(it.value)
                         }
@@ -73,21 +73,20 @@ fun ImageTextEditor(
                 content = {
                     Text(font.value)
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
         ParameterContent(
-            label = stringResource(Res.string.text_parameter_text_size)
+            label = stringResource(Res.string.text_parameter_text_size),
         ) {
             // 明日から始めるJetpack Compose入門
             // 基本編
             TextField(
-                value = size.toString(),
-                onValueChange = { onChangedSize(it.toIntOrNull() ?: 0) },
-                modifier = Modifier.fillMaxWidth()
+                value = size?.toString() ?: "",
+                onValueChange = { onChangedSize(it.toIntOrNull()) },
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
 }
-

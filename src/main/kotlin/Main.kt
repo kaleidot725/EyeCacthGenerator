@@ -55,47 +55,49 @@ val imageRepository = ImageRepository()
 // Font
 val fontRepository = FontRepository()
 
-val stateFlow: Flow<MainState> = scope.launchMolecule(mode = RecompositionMode.Immediate) {
-    MainProcessor(
-        event = event,
-        windowRepository = windowRepository,
-        imageRepository = imageRepository,
-        fontRepository = fontRepository
-    )
-}
-
-fun main() = application {
-    val density = LocalDensity.current
-    val windowState by remember(window) { mutableStateOf(window.toWindowState(density)) }
-    val state by stateFlow.collectAsState(MainState.initValue)
-
-    LaunchedEffect(state.isExit) {
-        if (state.isExit) exitApplication()
+val stateFlow: Flow<MainState> =
+    scope.launchMolecule(mode = RecompositionMode.Immediate) {
+        MainProcessor(
+            event = event,
+            windowRepository = windowRepository,
+            imageRepository = imageRepository,
+            fontRepository = fontRepository,
+        )
     }
 
-    IntUiTheme(
-        theme = JewelTheme.darkThemeDefinition(),
-        styling = ComponentStyling.decoratedWindow(titleBarStyle = TitleBarStyle.dark()),
-    ) {
-        DecoratedWindow(
-            title = stringResource(Res.string.app),
-            state = windowState,
-            icon = painterResource(Res.drawable.icon),
-            onCloseRequest = {
-                scope.launch { event.emit(MainEvent.Destroy(windowState.toWindow(density))) }
-            },
+fun main() =
+    application {
+        val density = LocalDensity.current
+        val windowState by remember(window) { mutableStateOf(window.toWindowState(density)) }
+        val state by stateFlow.collectAsState(MainState.initValue)
+
+        LaunchedEffect(state.isExit) {
+            if (state.isExit) exitApplication()
+        }
+
+        IntUiTheme(
+            theme = JewelTheme.darkThemeDefinition(),
+            styling = ComponentStyling.decoratedWindow(titleBarStyle = TitleBarStyle.dark()),
         ) {
-            TitleBar(
-                style = TitleBarStyle.dark(),
-                modifier = Modifier.newFullscreenControls(),
+            DecoratedWindow(
+                title = stringResource(Res.string.app),
+                state = windowState,
+                icon = painterResource(Res.drawable.icon),
+                onCloseRequest = {
+                    scope.launch { event.emit(MainEvent.Destroy(windowState.toWindow(density))) }
+                },
             ) {
-                Text(text = stringResource(Res.string.app), textAlign = TextAlign.Center)
+                TitleBar(
+                    style = TitleBarStyle.dark(),
+                    modifier = Modifier.newFullscreenControls(),
+                ) {
+                    Text(text = stringResource(Res.string.app), textAlign = TextAlign.Center)
+                }
+                MainScreen(
+                    state = state,
+                    onEvent = { scope.launch { event.emit(it) } },
+                    modifier = Modifier.background(JewelTheme.globalColors.panelBackground),
+                )
             }
-            MainScreen(
-                state = state,
-                onEvent = { scope.launch { event.emit(it) } },
-                modifier = Modifier.background(JewelTheme.globalColors.panelBackground)
-            )
         }
     }
-}

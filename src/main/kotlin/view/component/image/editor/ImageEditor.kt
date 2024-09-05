@@ -53,21 +53,21 @@ import view.component.base.TitleText
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ImageCreator(
+fun ImageEditor(
     parameters: Parameters,
     onChangedTitle: (String) -> Unit,
     onChangedTitleFont: (Font) -> Unit,
-    onChangedTitleSize: (Int) -> Unit,
+    onChangedTitleSize: (Int?) -> Unit,
     onChangedSubTitle: (String) -> Unit,
     onChangedSubTitleFont: (Font) -> Unit,
-    onChangedSubTitleSize: (Int) -> Unit,
-    onChangedWidth: (Int) -> Unit,
-    onChangedHeight: (Int) -> Unit,
+    onChangedSubTitleSize: (Int?) -> Unit,
+    onChangedWidth: (Int?) -> Unit,
+    onChangedHeight: (Int?) -> Unit,
     onChangedStartColor: (ULong) -> Unit,
     onChangedEndColor: (ULong) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
-    allFonts: List<Font>
+    allFonts: List<Font>,
 ) {
     val controller: ColorPickerController = rememberColorPickerController()
     var selectedStartColor by remember { mutableStateOf(false) }
@@ -79,7 +79,7 @@ fun ImageCreator(
 
     Column(
         modifier = modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         ImageTextEditor(
             label = stringResource(Res.string.title_title),
@@ -90,7 +90,7 @@ fun ImageCreator(
             size = parameters.titleSize,
             onChangedSize = onChangedTitleSize,
             allFonts = allFonts,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         ImageTextEditor(
@@ -101,94 +101,99 @@ fun ImageCreator(
             onChangedFont = onChangedSubTitleFont,
             size = parameters.subTitleSize,
             onChangedSize = onChangedSubTitleSize,
-            allFonts = allFonts
+            allFonts = allFonts,
         )
 
         TitleText(stringResource(Res.string.category_size))
 
         ParameterContent(
-            label = stringResource(Res.string.width_title)
+            label = stringResource(Res.string.width_title),
         ) {
             TextField(
-                value = parameters.width.toString(),
-                onValueChange = { onChangedWidth(it.toIntOrNull() ?: 0) },
-                modifier = Modifier.fillMaxWidth()
+                value = parameters.width?.toString() ?: "",
+                onValueChange = { onChangedWidth(it.toIntOrNull()) },
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
         ParameterContent(
-            label = stringResource(Res.string.height_title)
+            label = stringResource(Res.string.height_title),
         ) {
             TextField(
-                value = parameters.height.toString(),
-                onValueChange = { onChangedHeight(it.toIntOrNull() ?: 0) },
-                modifier = Modifier.fillMaxWidth()
+                value = parameters.height?.toString() ?: "",
+                onValueChange = { onChangedHeight(it.toIntOrNull()) },
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
         TitleText(stringResource(Res.string.category_color))
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .background(Color(parameters.startColor), CircleShape)
-                    .align(Alignment.CenterVertically)
+                modifier =
+                    Modifier
+                        .size(20.dp)
+                        .background(Color(parameters.startColor), CircleShape)
+                        .align(Alignment.CenterVertically),
             )
 
             Text(
                 text = stringResource(Res.string.start_color_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
+                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically),
             )
 
             TextField(
                 value = Color(parameters.startColor).toRgbaHexString(),
                 onValueChange = {},
-                modifier = Modifier
-                    .weight(1.0f)
-                    .align(Alignment.CenterVertically)
-                    .onFocusChanged { state ->
-                        selectedStartColor = state.hasFocus
-                        if (selectedStartColor) controller.selectByColor(Color(parameters.startColor), true)
-                    }
+                modifier =
+                    Modifier
+                        .weight(1.0f)
+                        .align(Alignment.CenterVertically)
+                        .onFocusChanged { state ->
+                            selectedStartColor = state.hasFocus
+                            if (selectedStartColor) controller.selectByColor(Color(parameters.startColor), true)
+                        },
             )
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .background(Color(parameters.endColor), CircleShape)
-                    .align(Alignment.CenterVertically)
+                modifier =
+                    Modifier
+                        .size(20.dp)
+                        .background(Color(parameters.endColor), CircleShape)
+                        .align(Alignment.CenterVertically),
             )
 
             Text(
                 text = stringResource(Res.string.end_color_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically)
+                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically),
             )
 
             TextField(
                 value = Color(parameters.endColor).toRgbaHexString(),
                 onValueChange = {},
-                modifier = Modifier
-                    .weight(1.0f)
-                    .align(Alignment.CenterVertically)
-                    .onFocusChanged { state ->
-                        selectedEndColor = state.hasFocus
-                        if (selectedEndColor) controller.selectByColor(Color(parameters.endColor), true)
-                    }
+                modifier =
+                    Modifier
+                        .weight(1.0f)
+                        .align(Alignment.CenterVertically)
+                        .onFocusChanged { state ->
+                            selectedEndColor = state.hasFocus
+                            if (selectedEndColor) controller.selectByColor(Color(parameters.endColor), true)
+                        },
             )
         }
 
         HsvColorPicker(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .padding(10.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(10.dp),
             controller = controller,
             onColorChanged = { colorEnvelope: ColorEnvelope ->
                 if (selectedStartColor) {
@@ -198,28 +203,30 @@ fun ImageCreator(
                     onChangedEndColor(colorEnvelope.color.value)
                 }
             },
-            initialColor = Color.Red
+            initialColor = Color.Red,
         )
 
         AlphaSlider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(35.dp),
-            controller = controller
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(35.dp),
+            controller = controller,
         )
 
         BrightnessSlider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(35.dp),
-            controller = controller
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(35.dp),
+            controller = controller,
         )
 
         Spacer(modifier = Modifier.weight(1.0f))
 
         Row(
             modifier = Modifier.align(Alignment.End),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             DefaultButton(onClick = onSave) {
                 Text(stringResource(Res.string.save))
@@ -232,7 +239,7 @@ fun ImageCreator(
 @Composable
 private fun Preview() {
     Box(modifier = Modifier.size(500.dp)) {
-        ImageCreator(
+        ImageEditor(
             parameters = Parameters.initValue,
             onChangedTitle = {},
             onChangedTitleFont = {},
@@ -246,7 +253,7 @@ private fun Preview() {
             onChangedEndColor = {},
             onSave = {},
             allFonts = emptyList(),
-            modifier = Modifier
+            modifier = Modifier,
         )
     }
 }

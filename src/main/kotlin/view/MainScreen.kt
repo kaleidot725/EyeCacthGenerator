@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import view.component.image.ImagePreview
-import view.component.image.editor.ImageCreator
+import view.component.image.editor.ImageEditor
 
 @Composable
 fun MainScreen(
     state: MainState,
     onEvent: (MainEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
@@ -26,17 +26,19 @@ fun MainScreen(
             file = state.previewFile,
             date = state.previewUpdate,
             isLoading = state.isLoading,
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1.0f)
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .weight(1.0f),
         )
         Spacer(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp)
-                .background(JewelTheme.globalColors.borders.normal)
+            modifier =
+                Modifier
+                    .fillMaxHeight()
+                    .width(1.dp)
+                    .background(JewelTheme.globalColors.borders.normal),
         )
-        ImageCreator(
+        ImageEditor(
             parameters = state.parameters,
             onChangedTitle = { onEvent(MainEvent.ChangeTitle(it)) },
             onChangedTitleFont = { onEvent(MainEvent.ChangeTitleFont(it)) },
@@ -60,6 +62,6 @@ fun MainScreen(
 private fun Preview() {
     MainScreen(
         state = MainState.initValue,
-        onEvent = {}
+        onEvent = {},
     )
 }
