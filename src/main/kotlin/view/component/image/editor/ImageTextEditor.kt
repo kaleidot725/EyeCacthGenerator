@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
@@ -34,9 +36,7 @@ fun ImageTextEditor(
     allFonts: List<Font>,
     modifier: Modifier = Modifier
 ) {
-    val localText by rememberUpdatedState(text)
-    val localSize by rememberUpdatedState(size)
-
+    var localText by remember { mutableStateOf(text) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TitleText(
             text = label,
@@ -48,7 +48,10 @@ fun ImageTextEditor(
         ) {
             TextField(
                 value = localText,
-                onValueChange = onChangedText,
+                onValueChange = {
+                    localText = it
+                    onChangedText(it)
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -80,7 +83,7 @@ fun ImageTextEditor(
             // 明日から始めるJetpack Compose入門
             // 基本編
             TextField(
-                value = localSize.toString(),
+                value = size.toString(),
                 onValueChange = { onChangedSize(it.toIntOrNull() ?: 0) },
                 modifier = Modifier.fillMaxWidth()
             )

@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import model.Window.Companion.toWindow
 import model.Window.Companion.toWindowState
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -65,7 +64,6 @@ val stateFlow: Flow<MainState> = scope.launchMolecule(mode = RecompositionMode.I
     )
 }
 
-@OptIn(ExperimentalResourceApi::class)
 fun main() = application {
     val density = LocalDensity.current
     val windowState by remember(window) { mutableStateOf(window.toWindowState(density)) }
@@ -96,7 +94,7 @@ fun main() = application {
             MainScreen(
                 state = state,
                 onEvent = { scope.launch { event.emit(it) } },
-                modifier = Modifier.background(JewelTheme.globalColors.paneBackground)
+                modifier = Modifier.background(JewelTheme.globalColors.panelBackground)
             )
         }
     }
