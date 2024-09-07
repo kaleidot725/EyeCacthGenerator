@@ -2,6 +2,7 @@ package view.component.image.editor
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorEnvelope
@@ -42,8 +45,8 @@ import jp.kaleidot725.eyegen.eyegen.generated.resources.title_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.width_title
 import model.Font
 import model.Parameters
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.ui.component.DefaultButton
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
@@ -51,7 +54,6 @@ import org.jetbrains.jewel.ui.util.toRgbaHexString
 import view.component.base.ParameterContent
 import view.component.base.TitleText
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ImageEditor(
     parameters: Parameters,
@@ -70,12 +72,8 @@ fun ImageEditor(
     allFonts: List<Font>,
 ) {
     val controller: ColorPickerController = rememberColorPickerController()
-    var selectedStartColor by remember { mutableStateOf(false) }
-    var selectedEndColor by remember { mutableStateOf(false) }
-
-    LaunchedEffect(selectedStartColor, selectedEndColor) {
-        controller.enabled = (selectedStartColor || selectedEndColor)
-    }
+    var startColorPopUp by remember { mutableStateOf(false) }
+    var endColorPopUp by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier.padding(12.dp),
@@ -128,99 +126,67 @@ fun ImageEditor(
 
         TitleText(stringResource(Res.string.category_color))
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ParameterContent(
+            label = stringResource(Res.string.start_color_title),
         ) {
-            Box(
-                modifier =
-                    Modifier
-                        .size(20.dp)
-                        .background(Color(parameters.startColor), CircleShape)
-                        .align(Alignment.CenterVertically),
-            )
-
-            Text(
-                text = stringResource(Res.string.start_color_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically),
-            )
-
             TextField(
                 value = Color(parameters.startColor).toRgbaHexString(),
                 onValueChange = {},
-                modifier =
-                    Modifier
-                        .weight(1.0f)
-                        .align(Alignment.CenterVertically)
-                        .onFocusChanged { state ->
-                            selectedStartColor = state.hasFocus
-                            if (selectedStartColor) controller.selectByColor(Color(parameters.startColor), true)
-                        },
+                trailingIcon = {
+                    Box(
+                        modifier =
+                            Modifier
+                                .clickable { startColorPopUp = true }
+                                .size(20.dp)
+                                .background(Color(parameters.startColor), CircleShape),
+                    )
+
+                    Popup(
+                        onDismissRequest = { startColorPopUp = false },
+                        offset = IntOffset(x = -10, y = 0),
+                    ) {
+                        if (startColorPopUp) {
+                            ColorPicker(
+                                initialColor = Color(parameters.startColor),
+                                onChangedColor = onChangedStartColor,
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
             )
         }
 
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+        ParameterContent(
+            label = stringResource(Res.string.end_color_title),
         ) {
-            Box(
-                modifier =
-                    Modifier
-                        .size(20.dp)
-                        .background(Color(parameters.endColor), CircleShape)
-                        .align(Alignment.CenterVertically),
-            )
-
-            Text(
-                text = stringResource(Res.string.end_color_title),
-                modifier = Modifier.width(125.dp).align(Alignment.CenterVertically),
-            )
-
             TextField(
                 value = Color(parameters.endColor).toRgbaHexString(),
                 onValueChange = {},
-                modifier =
-                    Modifier
-                        .weight(1.0f)
-                        .align(Alignment.CenterVertically)
-                        .onFocusChanged { state ->
-                            selectedEndColor = state.hasFocus
-                            if (selectedEndColor) controller.selectByColor(Color(parameters.endColor), true)
-                        },
+                trailingIcon = {
+                    Box(
+                        modifier =
+                            Modifier
+                                .clickable { endColorPopUp = true }
+                                .size(20.dp)
+                                .background(Color(parameters.endColor), CircleShape),
+                    )
+
+                    Popup(
+                        onDismissRequest = { endColorPopUp = false },
+                        offset = IntOffset(x = -10, y = 0),
+                    ) {
+                        if (endColorPopUp) {
+                            ColorPicker(
+                                initialColor = Color(parameters.endColor),
+                                onChangedColor = onChangedEndColor,
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
             )
         }
-
-        HsvColorPicker(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(300.dp)
-                    .padding(10.dp),
-            controller = controller,
-            onColorChanged = { colorEnvelope: ColorEnvelope ->
-                if (selectedStartColor) {
-                    onChangedStartColor(colorEnvelope.color.value)
-                }
-                if (selectedEndColor) {
-                    onChangedEndColor(colorEnvelope.color.value)
-                }
-            },
-            initialColor = Color.Red,
-        )
-
-        AlphaSlider(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(35.dp),
-            controller = controller,
-        )
-
-        BrightnessSlider(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(35.dp),
-            controller = controller,
-        )
 
         Spacer(modifier = Modifier.weight(1.0f))
 
@@ -255,5 +221,53 @@ private fun Preview() {
             allFonts = emptyList(),
             modifier = Modifier,
         )
+    }
+}
+
+@Composable
+private fun ColorPicker(
+    initialColor: Color,
+    onChangedColor: (ULong) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val controller: ColorPickerController = rememberColorPickerController()
+    LaunchedEffect(Unit) { controller.selectByColor(initialColor, false) }
+
+    Box(modifier) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.shadow(8.dp).background(JewelTheme.globalColors.panelBackground).padding(12.dp),
+        ) {
+            HsvColorPicker(
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .height(200.dp)
+                        .padding(10.dp),
+                controller = controller,
+                onColorChanged = { colorEnvelope: ColorEnvelope ->
+                    if (initialColor != colorEnvelope.color) {
+                        onChangedColor(colorEnvelope.color.value)
+                    }
+                },
+                initialColor = Color.Red,
+            )
+
+            AlphaSlider(
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .height(35.dp),
+                controller = controller,
+            )
+
+            BrightnessSlider(
+                modifier =
+                    Modifier
+                        .width(250.dp)
+                        .height(35.dp),
+                controller = controller,
+            )
+        }
     }
 }

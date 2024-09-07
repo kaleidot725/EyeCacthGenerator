@@ -33,7 +33,7 @@ fun ImagePreview(
                 Result.success(bitmap)
             } catch (e: Exception) {
                 Result.failure(e)
-            }
+            },
         )
     }
     Box(modifier) {
@@ -41,18 +41,19 @@ fun ImagePreview(
             Image(
                 bitmap = it,
                 contentDescription = null,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
         }
 
         if (isLoading) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.2f))
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.2f)),
             ) {
                 CircularProgressIndicator(
-                    modifier = Modifier.size(100.dp).align(Alignment.Center)
+                    modifier = Modifier.size(100.dp).align(Alignment.Center),
                 )
             }
         }
