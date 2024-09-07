@@ -11,8 +11,8 @@ data class Parameters(
     val subTitleSize: Int?,
     val width: Int?,
     val height: Int?,
-    val startColor: ULong,
-    val endColor: ULong,
+    val startColor: ULong?,
+    val endColor: ULong?,
 ) {
     val isValid: Boolean
         get() {

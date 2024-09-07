@@ -77,11 +77,11 @@ sealed interface MainEvent {
     ) : MainEvent
 
     data class ChangeStartColor(
-        val color: ULong,
+        val color: ULong?,
     ) : MainEvent
 
     data class ChangeEndColor(
-        val color: ULong,
+        val color: ULong?,
     ) : MainEvent
 
     data object Save : MainEvent

@@ -3,19 +3,20 @@ package view.component.image.editor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldBuffer
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_font
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text_size
 import model.Font
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Dropdown
 import org.jetbrains.jewel.ui.component.Text
@@ -23,7 +24,6 @@ import org.jetbrains.jewel.ui.component.TextField
 import view.component.base.ParameterContent
 import view.component.base.TitleText
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ImageTextEditor(
     label: String,
@@ -36,7 +36,11 @@ fun ImageTextEditor(
     allFonts: List<Font>,
     modifier: Modifier = Modifier,
 ) {
-    var localText by remember { mutableStateOf(text) }
+    val textFieldState = rememberTextFieldState(initialText = text)
+    LaunchedEffect(textFieldState.text) { onChangedText(textFieldState.text.toString()) }
+    val sizeFieldState = rememberTextFieldState(initialText = size?.toString() ?: "")
+    LaunchedEffect(sizeFieldState.text) { onChangedSize(sizeFieldState.text.toString().toIntOrNull()) }
+
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         TitleText(
             text = label,
@@ -47,11 +51,7 @@ fun ImageTextEditor(
             label = stringResource(Res.string.text_parameter_text),
         ) {
             TextField(
-                value = localText,
-                onValueChange = {
-                    localText = it
-                    onChangedText(it)
-                },
+                state = textFieldState,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -80,13 +80,21 @@ fun ImageTextEditor(
         ParameterContent(
             label = stringResource(Res.string.text_parameter_text_size),
         ) {
-            // 明日から始めるJetpack Compose入門
-            // 基本編
             TextField(
-                value = size?.toString() ?: "",
-                onValueChange = { onChangedSize(it.toIntOrNull()) },
+                state = sizeFieldState,
+                inputTransformation = IntOnlyTransformation,
                 modifier = Modifier.fillMaxWidth(),
             )
+        }
+    }
+}
+
+object IntOnlyTransformation : InputTransformation {
+    override val keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+
+    override fun TextFieldBuffer.transformInput() {
+        if (this.asCharSequence().toString().isNotEmpty() && this.asCharSequence().toString().toIntOrNull() == null) {
+            this.revertAllChanges()
         }
     }
 }

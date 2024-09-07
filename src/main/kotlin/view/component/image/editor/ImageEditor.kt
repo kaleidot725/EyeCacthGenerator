@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -54,6 +56,7 @@ import org.jetbrains.jewel.ui.util.toRgbaHexString
 import view.component.base.ParameterContent
 import view.component.base.TitleText
 
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ImageEditor(
     parameters: Parameters,
@@ -65,15 +68,31 @@ fun ImageEditor(
     onChangedSubTitleSize: (Int?) -> Unit,
     onChangedWidth: (Int?) -> Unit,
     onChangedHeight: (Int?) -> Unit,
-    onChangedStartColor: (ULong) -> Unit,
-    onChangedEndColor: (ULong) -> Unit,
+    onChangedStartColor: (ULong?) -> Unit,
+    onChangedEndColor: (ULong?) -> Unit,
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
     allFonts: List<Font>,
 ) {
-    val controller: ColorPickerController = rememberColorPickerController()
+    val width = rememberTextFieldState(initialText = parameters.width?.toString() ?: "")
+    LaunchedEffect(width.text) { onChangedWidth(width.text.toString().toIntOrNull()) }
+
+    val height = rememberTextFieldState(initialText = parameters.height?.toString() ?: "")
+    LaunchedEffect(height.text) { onChangedHeight(height.text.toString().toIntOrNull()) }
+
     var startColorPopUp by remember { mutableStateOf(false) }
+    val startColor by remember(parameters.startColor) {
+        mutableStateOf(
+            TextFieldState(parameters.startColor?.let { Color(it).toRgbaHexString() } ?: ""),
+        )
+    }
+
     var endColorPopUp by remember { mutableStateOf(false) }
+    val endColor by remember(parameters.endColor) {
+        mutableStateOf(
+            TextFieldState(parameters.endColor?.let { Color(it).toRgbaHexString() } ?: ""),
+        )
+    }
 
     Column(
         modifier = modifier.padding(12.dp),
@@ -108,8 +127,7 @@ fun ImageEditor(
             label = stringResource(Res.string.width_title),
         ) {
             TextField(
-                value = parameters.width?.toString() ?: "",
-                onValueChange = { onChangedWidth(it.toIntOrNull()) },
+                state = width,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -118,8 +136,7 @@ fun ImageEditor(
             label = stringResource(Res.string.height_title),
         ) {
             TextField(
-                value = parameters.height?.toString() ?: "",
-                onValueChange = { onChangedHeight(it.toIntOrNull()) },
+                state = height,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
@@ -129,16 +146,16 @@ fun ImageEditor(
         ParameterContent(
             label = stringResource(Res.string.start_color_title),
         ) {
+            val color = Color(parameters.startColor ?: Color.Transparent.value)
             TextField(
-                value = Color(parameters.startColor).toRgbaHexString(),
-                onValueChange = {},
+                state = startColor,
                 trailingIcon = {
                     Box(
                         modifier =
                             Modifier
                                 .clickable { startColorPopUp = true }
                                 .size(20.dp)
-                                .background(Color(parameters.startColor), CircleShape),
+                                .background(color, CircleShape),
                     )
 
                     Popup(
@@ -147,7 +164,7 @@ fun ImageEditor(
                     ) {
                         if (startColorPopUp) {
                             ColorPicker(
-                                initialColor = Color(parameters.startColor),
+                                initialColor = color,
                                 onChangedColor = onChangedStartColor,
                             )
                         }
@@ -160,16 +177,16 @@ fun ImageEditor(
         ParameterContent(
             label = stringResource(Res.string.end_color_title),
         ) {
+            val color = Color(parameters.endColor ?: Color.Transparent.value)
             TextField(
-                value = Color(parameters.endColor).toRgbaHexString(),
-                onValueChange = {},
+                state = endColor,
                 trailingIcon = {
                     Box(
                         modifier =
                             Modifier
                                 .clickable { endColorPopUp = true }
                                 .size(20.dp)
-                                .background(Color(parameters.endColor), CircleShape),
+                                .background(color, CircleShape),
                     )
 
                     Popup(
@@ -178,7 +195,7 @@ fun ImageEditor(
                     ) {
                         if (endColorPopUp) {
                             ColorPicker(
-                                initialColor = Color(parameters.endColor),
+                                initialColor = color,
                                 onChangedColor = onChangedEndColor,
                             )
                         }

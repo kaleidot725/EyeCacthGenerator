@@ -34,8 +34,8 @@ class ImageRepository {
 
             if (parameters.isValid) {
                 try {
-                    val startColor = Color(parameters.startColor)
-                    val endColor = Color(parameters.endColor)
+                    val startColor = Color(parameters.startColor ?: Color.Transparent.value)
+                    val endColor = Color(parameters.endColor ?: Color.Transparent.value)
                     val output =
                         BufferedImage(
                             parameters.width ?: 0,
