@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_font
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text_color
 import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text_size
 import model.Font
 import model.params.TitleParameter
@@ -56,7 +57,7 @@ fun TitleCategoryEditor(
         )
 
         ColorEditor(
-            label = "Color",
+            label = stringResource(Res.string.text_parameter_text_color),
             initialColor = title.color,
             onChangedColor = onChangedColor,
         )

@@ -181,7 +181,7 @@ fun MainProcessor(
                 is MainEvent.ChangeSubTitleSize -> {
                     parameters =
                         parameters.copy(
-                            subTitle = parameters.title.copy(size = event.value),
+                            subTitle = parameters.subTitle.copy(size = event.value),
                         )
                     createPreviewFile()
                 }
@@ -189,7 +189,7 @@ fun MainProcessor(
                 is MainEvent.ChangeSubTitleColor -> {
                     parameters =
                         parameters.copy(
-                            subTitle = parameters.title.copy(color = event.value),
+                            subTitle = parameters.subTitle.copy(color = event.value),
                         )
                     createPreviewFile()
                 }

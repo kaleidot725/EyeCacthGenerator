@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.jetbrains.jewel.ui.component.HorizontalSplitLayout
 import view.component.image.ImagePreview
-import view.component.image.editor.ImageEditor
+import view.component.image.editor.AllParameterEditor
 
 @Composable
 fun MainScreen(
@@ -27,7 +27,7 @@ fun MainScreen(
             )
         },
         second = {
-            ImageEditor(
+            AllParameterEditor(
                 parameters = state.parameters,
                 onEvent = onEvent,
                 allFonts = state.fonts,

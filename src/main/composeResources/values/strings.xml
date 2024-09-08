@@ -7,7 +7,8 @@
     <string name="text_parameter_text">Text</string>
     <string name="text_parameter_font">Font</string>
     <string name="text_parameter_text_size">Size</string>
-
+    <string name="text_parameter_text_color">Color</string>
+    
     <string name="category_size">Size</string>
     <string name="width_title">Width</string>
     <string name="height_title">Height</string>

@@ -35,7 +35,7 @@ import view.component.image.editor.value.ColorEditor
 import view.component.image.editor.value.SizeEditor
 
 @Composable
-fun ImageEditor(
+fun AllParameterEditor(
     parameters: Parameters,
     onEvent: (MainEvent) -> Unit,
     modifier: Modifier = Modifier,
@@ -114,7 +114,7 @@ fun ImageEditor(
 @Composable
 private fun Preview() {
     Box(modifier = Modifier.size(500.dp)) {
-        ImageEditor(
+        AllParameterEditor(
             parameters = Parameters.initValue,
             onEvent = {},
             allFonts = emptyList(),
