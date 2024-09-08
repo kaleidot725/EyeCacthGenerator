@@ -9,17 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
-import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text_size
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.TextField
 import view.component.base.ParameterContent
 
 @Composable
 fun SizeEditor(
+    label: String,
     initialSize: Int?,
     onChangedSize: (Int?) -> Unit,
-    label: String = stringResource(Res.string.text_parameter_text_size),
     modifier: Modifier = Modifier,
 ) {
     val size = rememberTextFieldState(initialText = initialSize?.toString() ?: "")

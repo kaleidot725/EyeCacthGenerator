@@ -4,16 +4,14 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
-import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_font
 import model.Font
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.Dropdown
 import org.jetbrains.jewel.ui.component.Text
 import view.component.base.ParameterContent
 
 @Composable
 fun FontEditor(
+    label: String,
     selectedFont: Font,
     fonts: List<Font>,
     onChangedFont: (Font) -> Unit,
@@ -21,7 +19,7 @@ fun FontEditor(
 ) {
     ParameterContent(
         modifier = modifier,
-        label = stringResource(Res.string.text_parameter_font),
+        label = label,
     ) {
         Dropdown(
             menuContent = {
@@ -55,6 +53,7 @@ private fun Preview() {
         )
 
     FontEditor(
+        label = "TEST",
         selectedFont = fonts.first(),
         fonts = fonts,
         onChangedFont = {},

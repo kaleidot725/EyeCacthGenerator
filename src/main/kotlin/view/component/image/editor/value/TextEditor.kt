@@ -5,14 +5,12 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
-import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.TextField
 import view.component.base.ParameterContent
 
 @Composable
 fun TextEditor(
+    label: String,
     initialText: String,
     onChangedText: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -22,7 +20,7 @@ fun TextEditor(
 
     ParameterContent(
         modifier = modifier,
-        label = stringResource(Res.string.text_parameter_text),
+        label = label,
     ) {
         TextField(
             state = textFieldState,

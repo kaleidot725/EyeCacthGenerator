@@ -29,17 +29,7 @@ fun MainScreen(
         second = {
             ImageEditor(
                 parameters = state.parameters,
-                onChangedTitle = { onEvent(MainEvent.ChangeTitle(it)) },
-                onChangedTitleFont = { onEvent(MainEvent.ChangeTitleFont(it)) },
-                onChangedTitleSize = { onEvent(MainEvent.ChangeTitleSize(it)) },
-                onChangedSubTitle = { onEvent(MainEvent.ChangeSubTitle(it)) },
-                onChangedSubTitleFont = { onEvent(MainEvent.ChangeSubTitleFont(it)) },
-                onChangedSubTitleSize = { onEvent(MainEvent.ChangeSubTitleSize(it)) },
-                onChangedWidth = { onEvent(MainEvent.ChangeWidth(it)) },
-                onChangedHeight = { onEvent(MainEvent.ChangeHeight(it)) },
-                onChangedStartColor = { onEvent(MainEvent.ChangeStartColor(it)) },
-                onChangedEndColor = { onEvent(MainEvent.ChangeEndColor(it)) },
-                onSave = { onEvent(MainEvent.Save) },
+                onEvent = onEvent,
                 allFonts = state.fonts,
                 modifier = Modifier.fillMaxHeight(),
             )

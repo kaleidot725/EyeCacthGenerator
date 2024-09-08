@@ -24,30 +24,20 @@ import jp.kaleidot725.eyegen.eyegen.generated.resources.subtitle_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.title_title
 import jp.kaleidot725.eyegen.eyegen.generated.resources.width_title
 import model.Font
-import model.Parameters
+import model.params.Parameters
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.jewel.ui.component.DefaultButton
 import org.jetbrains.jewel.ui.component.Text
+import view.MainEvent
 import view.component.base.TitleText
 import view.component.image.editor.category.TitleCategoryEditor
 import view.component.image.editor.value.ColorEditor
 import view.component.image.editor.value.SizeEditor
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ImageEditor(
     parameters: Parameters,
-    onChangedTitle: (String) -> Unit,
-    onChangedTitleFont: (Font) -> Unit,
-    onChangedTitleSize: (Int?) -> Unit,
-    onChangedSubTitle: (String) -> Unit,
-    onChangedSubTitleFont: (Font) -> Unit,
-    onChangedSubTitleSize: (Int?) -> Unit,
-    onChangedWidth: (Int?) -> Unit,
-    onChangedHeight: (Int?) -> Unit,
-    onChangedStartColor: (ULong?) -> Unit,
-    onChangedEndColor: (ULong?) -> Unit,
-    onSave: () -> Unit,
+    onEvent: (MainEvent) -> Unit,
     modifier: Modifier = Modifier,
     allFonts: List<Font>,
 ) {
@@ -56,26 +46,25 @@ fun ImageEditor(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         TitleCategoryEditor(
-            label = stringResource(Res.string.title_title),
-            text = parameters.title,
-            onChangedText = onChangedTitle,
-            font = parameters.titleFont,
-            onChangedFont = onChangedTitleFont,
-            size = parameters.titleSize,
-            onChangedSize = onChangedTitleSize,
             allFonts = allFonts,
+            label = stringResource(Res.string.title_title),
+            title = parameters.title,
+            onChangedText = { onEvent(MainEvent.ChangeTitle(it)) },
+            onChangedFont = { onEvent(MainEvent.ChangeTitleFont(it)) },
+            onChangedSize = { onEvent(MainEvent.ChangeTitleSize(it)) },
+            onChangedColor = { onEvent(MainEvent.ChangeTitleColor(it)) },
             modifier = Modifier.fillMaxWidth(),
         )
 
         TitleCategoryEditor(
-            label = stringResource(Res.string.subtitle_title),
-            text = parameters.subTitle,
-            onChangedText = onChangedSubTitle,
-            font = parameters.subTitleFont,
-            onChangedFont = onChangedSubTitleFont,
-            size = parameters.subTitleSize,
-            onChangedSize = onChangedSubTitleSize,
             allFonts = allFonts,
+            label = stringResource(Res.string.subtitle_title),
+            title = parameters.subTitle,
+            onChangedText = { onEvent(MainEvent.ChangeSubTitle(it)) },
+            onChangedFont = { onEvent(MainEvent.ChangeSubTitleFont(it)) },
+            onChangedSize = { onEvent(MainEvent.ChangeSubTitleSize(it)) },
+            onChangedColor = { onEvent(MainEvent.ChangeSubTitleColor(it)) },
+            modifier = Modifier.fillMaxWidth(),
         )
 
         TitleText(stringResource(Res.string.category_size))
@@ -83,14 +72,14 @@ fun ImageEditor(
         SizeEditor(
             label = stringResource(Res.string.width_title),
             initialSize = parameters.width,
-            onChangedSize = onChangedWidth,
+            onChangedSize = { onEvent(MainEvent.ChangeWidth(it)) },
             modifier = Modifier.fillMaxWidth(),
         )
 
         SizeEditor(
             label = stringResource(Res.string.height_title),
             initialSize = parameters.height,
-            onChangedSize = onChangedHeight,
+            onChangedSize = { onEvent(MainEvent.ChangeHeight(it)) },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -99,13 +88,13 @@ fun ImageEditor(
         ColorEditor(
             label = stringResource(Res.string.start_color_title),
             initialColor = parameters.startColor,
-            onChangedColor = onChangedStartColor,
+            onChangedColor = { onEvent(MainEvent.ChangeStartColor(it)) },
         )
 
         ColorEditor(
             label = stringResource(Res.string.end_color_title),
             initialColor = parameters.endColor,
-            onChangedColor = onChangedEndColor,
+            onChangedColor = { onEvent(MainEvent.ChangeEndColor(it)) },
         )
 
         Spacer(modifier = Modifier.weight(1.0f))
@@ -114,7 +103,7 @@ fun ImageEditor(
             modifier = Modifier.align(Alignment.End),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            DefaultButton(onClick = onSave) {
+            DefaultButton(onClick = { onEvent(MainEvent.Save) }) {
                 Text(stringResource(Res.string.save))
             }
         }
@@ -127,17 +116,7 @@ private fun Preview() {
     Box(modifier = Modifier.size(500.dp)) {
         ImageEditor(
             parameters = Parameters.initValue,
-            onChangedTitle = {},
-            onChangedTitleFont = {},
-            onChangedTitleSize = {},
-            onChangedSubTitle = {},
-            onChangedSubTitleFont = {},
-            onChangedSubTitleSize = {},
-            onChangedWidth = {},
-            onChangedHeight = {},
-            onChangedStartColor = {},
-            onChangedEndColor = {},
-            onSave = {},
+            onEvent = {},
             allFonts = emptyList(),
             modifier = Modifier,
         )

@@ -3,7 +3,7 @@ package repository
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import model.Parameters
+import model.params.Parameters
 import util.OSContext
 import java.awt.Font
 import java.awt.GradientPaint
@@ -34,6 +34,8 @@ class ImageRepository {
 
             if (parameters.isValid) {
                 try {
+                    val titleColor = Color(parameters.title.color ?: Color.Transparent.value)
+                    val subTitleColor = Color(parameters.subTitle.color ?: Color.Transparent.value)
                     val startColor = Color(parameters.startColor ?: Color.Transparent.value)
                     val endColor = Color(parameters.endColor ?: Color.Transparent.value)
                     val output =
@@ -54,19 +56,20 @@ class ImageRepository {
                             endColor.toAwtColor(),
                         )
                     imageGraphic.fillRect(0, 0, parameters.width ?: 0, parameters.height ?: 0)
-                    imageGraphic.color = java.awt.Color.black
 
-                    val titleFont = Font(parameters.titleFont.value, Font.PLAIN, parameters.titleSize ?: 0)
-                    val titleWidth = getWidth(titleFont, parameters.title)
+                    imageGraphic.color = titleColor.toAwtColor()
+                    val titleFont = Font(parameters.title.font.value, Font.PLAIN, parameters.title.size ?: 0)
+                    val titleWidth = getWidth(titleFont, parameters.title.text)
                     val titleHeight = getHeight(titleFont)
                     val titleX = getCenterX(maxWidth = parameters.width ?: 0, textWidth = titleWidth)
                     val titleY = getCenterY(maxHeight = parameters.height ?: 0, textHeight = titleHeight)
 
                     imageGraphic.font = titleFont
-                    imageGraphic.drawString(parameters.title, titleX, titleY)
+                    imageGraphic.drawString(parameters.title.text, titleX, titleY)
 
-                    val subTitleFont = Font(parameters.subTitleFont.value, Font.PLAIN, parameters.subTitleSize ?: 0)
-                    val subTitleWidth = getWidth(subTitleFont, parameters.subTitle)
+                    imageGraphic.color = subTitleColor.toAwtColor()
+                    val subTitleFont = Font(parameters.subTitle.font.value, Font.PLAIN, parameters.subTitle.size ?: 0)
+                    val subTitleWidth = getWidth(subTitleFont, parameters.subTitle.text)
                     val subTitleHeight = getHeight(subTitleFont)
                     val subTitleX =
                         getCenterX(
@@ -80,7 +83,7 @@ class ImageRepository {
                         ) + titleHeight
 
                     imageGraphic.font = subTitleFont
-                    imageGraphic.drawString(parameters.subTitle, subTitleX, subTitleY)
+                    imageGraphic.drawString(parameters.subTitle.text, subTitleX, subTitleY)
 
                     ImageIO.write(output, "PNG", outputFile)
                     outputFile

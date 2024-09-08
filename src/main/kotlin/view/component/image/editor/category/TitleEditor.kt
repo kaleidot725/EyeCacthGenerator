@@ -6,8 +6,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_font
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text
+import jp.kaleidot725.eyegen.eyegen.generated.resources.text_parameter_text_size
 import model.Font
+import model.params.TitleParameter
+import org.jetbrains.compose.resources.stringResource
 import view.component.base.TitleText
+import view.component.image.editor.value.ColorEditor
 import view.component.image.editor.value.FontEditor
 import view.component.image.editor.value.SizeEditor
 import view.component.image.editor.value.TextEditor
@@ -15,13 +22,12 @@ import view.component.image.editor.value.TextEditor
 @Composable
 fun TitleCategoryEditor(
     label: String,
-    text: String,
-    onChangedText: (String) -> Unit,
-    font: Font,
-    onChangedFont: (Font) -> Unit,
-    size: Int?,
-    onChangedSize: (Int?) -> Unit,
     allFonts: List<Font>,
+    title: TitleParameter,
+    onChangedText: (String) -> Unit,
+    onChangedFont: (Font) -> Unit,
+    onChangedSize: (Int?) -> Unit,
+    onChangedColor: (ULong?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -31,19 +37,28 @@ fun TitleCategoryEditor(
         )
 
         TextEditor(
-            initialText = text,
+            label = stringResource(Res.string.text_parameter_text),
+            initialText = title.text,
             onChangedText = onChangedText,
         )
 
         FontEditor(
+            label = stringResource(Res.string.text_parameter_font),
             fonts = allFonts,
-            selectedFont = font,
+            selectedFont = title.font,
             onChangedFont = onChangedFont,
         )
 
         SizeEditor(
-            initialSize = size,
+            label = stringResource(Res.string.text_parameter_text_size),
+            initialSize = title.size,
             onChangedSize = onChangedSize,
+        )
+
+        ColorEditor(
+            label = "Color",
+            initialColor = title.color,
+            onChangedColor = onChangedColor,
         )
     }
 }

@@ -1,14 +1,11 @@
-package model
+package model.params
 
 import androidx.compose.ui.graphics.Color
+import model.Font
 
 data class Parameters(
-    val title: String,
-    val titleFont: Font,
-    val titleSize: Int?,
-    val subTitle: String,
-    val subTitleFont: Font,
-    val subTitleSize: Int?,
+    val title: TitleParameter,
+    val subTitle: TitleParameter,
     val width: Int?,
     val height: Int?,
     val startColor: ULong?,
@@ -25,12 +22,20 @@ data class Parameters(
     companion object {
         val initValue =
             Parameters(
-                title = "Hello World",
-                titleFont = Font("Arial"),
-                titleSize = 48,
-                subTitle = "Hello World",
-                subTitleFont = Font("Arial"),
-                subTitleSize = 48,
+                title =
+                    TitleParameter(
+                        "Hello World",
+                        Font("Arial"),
+                        48,
+                        color = Color.White.value,
+                    ),
+                subTitle =
+                    TitleParameter(
+                        "Hello World",
+                        Font("Arial"),
+                        48,
+                        color = Color.White.value,
+                    ),
                 width = 1920,
                 height = 1080,
                 startColor = Color.Red.value,

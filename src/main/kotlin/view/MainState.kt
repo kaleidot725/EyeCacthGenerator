@@ -12,8 +12,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import model.Font
-import model.Parameters
 import model.Window
+import model.params.Parameters
 import repository.FontRepository
 import repository.ImageRepository
 import repository.WindowRepository
@@ -56,6 +56,10 @@ sealed interface MainEvent {
         val value: Int?,
     ) : MainEvent
 
+    data class ChangeTitleColor(
+        val value: ULong?,
+    ) : MainEvent
+
     data class ChangeSubTitle(
         val value: String,
     ) : MainEvent
@@ -66,6 +70,10 @@ sealed interface MainEvent {
 
     data class ChangeSubTitleSize(
         val value: Int?,
+    ) : MainEvent
+
+    data class ChangeSubTitleColor(
+        val value: ULong?,
     ) : MainEvent
 
     data class ChangeWidth(
@@ -123,32 +131,66 @@ fun MainProcessor(
         event.collect { event ->
             when (event) {
                 is MainEvent.ChangeTitle -> {
-                    parameters = parameters.copy(title = event.value)
+                    parameters =
+                        parameters.copy(
+                            title = parameters.title.copy(text = event.value),
+                        )
                     createPreviewFile()
                 }
 
                 is MainEvent.ChangeTitleFont -> {
-                    parameters = parameters.copy(titleFont = event.value)
+                    parameters =
+                        parameters.copy(
+                            title = parameters.title.copy(font = event.value),
+                        )
                     createPreviewFile()
                 }
 
                 is MainEvent.ChangeTitleSize -> {
-                    parameters = parameters.copy(titleSize = event.value)
+                    parameters =
+                        parameters.copy(
+                            title = parameters.title.copy(size = event.value),
+                        )
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeTitleColor -> {
+                    parameters =
+                        parameters.copy(
+                            title = parameters.title.copy(color = event.value),
+                        )
                     createPreviewFile()
                 }
 
                 is MainEvent.ChangeSubTitle -> {
-                    parameters = parameters.copy(subTitle = event.value)
+                    parameters =
+                        parameters.copy(
+                            subTitle = parameters.subTitle.copy(text = event.value),
+                        )
                     createPreviewFile()
                 }
 
                 is MainEvent.ChangeSubTitleFont -> {
-                    parameters = parameters.copy(subTitleFont = event.value)
+                    parameters =
+                        parameters.copy(
+                            subTitle = parameters.subTitle.copy(font = event.value),
+                        )
                     createPreviewFile()
                 }
 
                 is MainEvent.ChangeSubTitleSize -> {
-                    parameters = parameters.copy(subTitleSize = event.value)
+                    parameters =
+                        parameters.copy(
+                            subTitle = parameters.title.copy(size = event.value),
+                        )
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeSubTitleColor -> {
+                    parameters =
+                        parameters.copy(
+                            subTitle = parameters.title.copy(color = event.value),
+                        )
                     createPreviewFile()
                 }
 
