@@ -17,7 +17,7 @@ import org.jetbrains.compose.resources.stringResource
 import view.component.base.TitleText
 import view.component.image.editor.value.ColorEditor
 import view.component.image.editor.value.FontEditor
-import view.component.image.editor.value.SizeEditor
+import view.component.image.editor.value.IntValueEditor
 import view.component.image.editor.value.TextEditor
 
 @Composable
@@ -50,7 +50,7 @@ fun TitleCategoryEditor(
             onChangedFont = onChangedFont,
         )
 
-        SizeEditor(
+        IntValueEditor(
             label = stringResource(Res.string.text_parameter_text_size),
             initialSize = title.size,
             onChangedSize = onChangedSize,

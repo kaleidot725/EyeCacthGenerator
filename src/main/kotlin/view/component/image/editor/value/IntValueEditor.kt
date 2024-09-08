@@ -13,7 +13,7 @@ import org.jetbrains.jewel.ui.component.TextField
 import view.component.base.ParameterContent
 
 @Composable
-fun SizeEditor(
+fun IntValueEditor(
     label: String,
     initialSize: Int?,
     onChangedSize: (Int?) -> Unit,
