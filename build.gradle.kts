@@ -22,8 +22,8 @@ dependencies {
     implementation(compose.desktop.currentOs) {
         exclude(group = "org.jetbrains.compose.material")
     }
-    implementation("org.jetbrains.jewel:jewel-int-ui-standalone-241:0.24.0")
-    implementation("org.jetbrains.jewel:jewel-int-ui-decorated-window-241:0.24.0")
+    implementation("org.jetbrains.jewel:jewel-int-ui-standalone-241:0.24.2")
+    implementation("org.jetbrains.jewel:jewel-int-ui-decorated-window-241:0.24.2")
     implementation("com.github.skydoves:colorpicker-compose:1.1.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.8.0")
