@@ -10,6 +10,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.application
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
+import com.russhwolf.settings.ObservableSettings
+import com.russhwolf.settings.PreferencesSettings
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
 import jp.kaleidot725.eyegen.eyegen.generated.resources.app
 import jp.kaleidot725.eyegen.eyegen.generated.resources.icon
@@ -41,16 +43,18 @@ import view.MainEvent
 import view.MainProcessor
 import view.MainScreen
 import view.MainState
+import java.util.prefs.Preferences
 
 val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 val event = MutableSharedFlow<MainEvent>()
+val settings: ObservableSettings = PreferencesSettings(Preferences.userRoot())
 
 // Window
-val windowRepository = WindowRepository()
+val windowRepository = WindowRepository(settings)
 val window = windowRepository.get()
 
 // Image
-val imageRepository = ImageRepository()
+val imageRepository = ImageRepository(settings)
 
 // Font
 val fontRepository = FontRepository()
@@ -69,7 +73,8 @@ fun main() =
     application {
         val density = LocalDensity.current
         val windowState by remember(window) { mutableStateOf(window.toWindowState(density)) }
-        val state by stateFlow.collectAsState(MainState.initValue)
+        val state by stateFlow.collectAsState(MainState.Null)
+        if (state == MainState.Null) return@application
 
         LaunchedEffect(state.isExit) {
             if (state.isExit) exitApplication()
@@ -84,7 +89,14 @@ fun main() =
                 state = windowState,
                 icon = painterResource(Res.drawable.icon),
                 onCloseRequest = {
-                    scope.launch { event.emit(MainEvent.Destroy(windowState.toWindow(density))) }
+                    scope.launch {
+                        event.emit(
+                            MainEvent.Destroy(
+                                parameters = state.parameters,
+                                window = windowState.toWindow(density)
+                            )
+                        )
+                    }
                 },
             ) {
                 TitleBar(

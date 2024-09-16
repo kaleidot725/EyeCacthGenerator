@@ -1,14 +1,13 @@
 package repository
 
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.PreferencesSettings
 import com.russhwolf.settings.set
 import data.PreferenceKeys
 import model.Window
-import java.util.prefs.Preferences
 
-class WindowRepository {
-    private val settings: ObservableSettings = PreferencesSettings(Preferences.userRoot())
+class WindowRepository(
+    private val settings: ObservableSettings
+) {
 
     fun update(state: Window) {
         settings[PreferenceKeys.WINDOW_WIDTH] = state.width

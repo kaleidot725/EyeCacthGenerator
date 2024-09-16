@@ -1,8 +1,10 @@
 package model.params
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.serialization.Serializable
 import model.Font
 
+@Serializable
 data class Parameters(
     val title: TitleParameter,
     val subTitle: TitleParameter,
@@ -28,7 +30,7 @@ data class Parameters(
                     Font("Arial"),
                     48,
                     color = Color.White.value,
-                    position = Position(0.5f, 0.5f),
+                    position = PositionParameter(0.5f, 0.5f),
                 ),
                 subTitle =
                 TitleParameter(
@@ -36,7 +38,7 @@ data class Parameters(
                     Font("Arial"),
                     48,
                     color = Color.White.value,
-                    position = Position(0.5f, 0.5f),
+                    position = PositionParameter(0.5f, 0.5f),
                 ),
                 width = 1920,
                 height = 1080,

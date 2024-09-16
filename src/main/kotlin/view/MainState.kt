@@ -30,7 +30,7 @@ data class MainState(
     val isExit: Boolean = false,
 ) {
     companion object {
-        val initValue =
+        val Null =
             MainState(
                 parameters = Parameters.initValue,
                 previewFile = File(""),
@@ -111,6 +111,7 @@ sealed interface MainEvent {
     data object Save : MainEvent
 
     data class Destroy(
+        val parameters: Parameters,
         val window: Window,
     ) : MainEvent
 }
@@ -122,6 +123,8 @@ fun MainProcessor(
     imageRepository: ImageRepository,
     fontRepository: FontRepository,
 ): MainState {
+    println(imageRepository.localParameters)
+
     val scope = rememberCoroutineScope()
     var parameters by remember { mutableStateOf(imageRepository.localParameters) }
     var previewFile by remember { mutableStateOf(File("")) }
@@ -182,7 +185,9 @@ fun MainProcessor(
                     parameters =
                         parameters.copy(
                             title = parameters.title.copy(
-                                position = parameters.title.position.copy(x = event.value ?: 0.5f)
+                                position = parameters.title.position.copy(
+                                    x = event.value ?: parameters.title.position.x
+                                )
                             ),
                         )
                     createPreviewFile()
@@ -192,7 +197,9 @@ fun MainProcessor(
                     parameters =
                         parameters.copy(
                             title = parameters.title.copy(
-                                position = parameters.title.position.copy(y = event.value ?: 0.5f)
+                                position = parameters.title.position.copy(
+                                    y = event.value ?: parameters.title.position.y
+                                )
                             ),
                         )
                     createPreviewFile()
@@ -234,7 +241,9 @@ fun MainProcessor(
                     parameters =
                         parameters.copy(
                             subTitle = parameters.subTitle.copy(
-                                position = parameters.subTitle.position.copy(x = event.value ?: 0.5f)
+                                position = parameters.subTitle.position.copy(
+                                    x = event.value ?: parameters.subTitle.position.x
+                                )
                             ),
                         )
                     createPreviewFile()
@@ -244,7 +253,9 @@ fun MainProcessor(
                     parameters =
                         parameters.copy(
                             subTitle = parameters.subTitle.copy(
-                                position = parameters.subTitle.position.copy(y = event.value ?: 0.5f)
+                                position = parameters.subTitle.position.copy(
+                                    y = event.value ?: parameters.subTitle.position.y
+                                )
                             ),
                         )
                     createPreviewFile()
@@ -275,6 +286,7 @@ fun MainProcessor(
                 }
 
                 is MainEvent.Destroy -> {
+                    imageRepository.updateParameters(event.parameters)
                     windowRepository.update(event.window)
                     isExit = true
                 }

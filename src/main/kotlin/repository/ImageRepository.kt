@@ -2,15 +2,13 @@ package repository
 
 import androidx.compose.ui.graphics.Color
 import com.russhwolf.settings.ObservableSettings
-import com.russhwolf.settings.PreferencesSettings
-import com.russhwolf.settings.get
 import com.russhwolf.settings.set
 import data.PreferenceKeys
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import model.params.Parameters
-import model.params.Position
-import model.params.TitleParameter
 import util.OSContext
 import java.awt.Font
 import java.awt.GradientPaint
@@ -21,11 +19,11 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Date
-import java.util.prefs.Preferences
 import javax.imageio.ImageIO
 
-class ImageRepository {
-    private val settings: ObservableSettings = PreferencesSettings(Preferences.userRoot())
+class ImageRepository(
+    private val settings: ObservableSettings
+) {
     val localParameters get() = getParameters()
 
     suspend fun createPreview(parameters: Parameters): File {
@@ -120,7 +118,7 @@ class ImageRepository {
                     imageGraphic.drawString(parameters.subTitle.text, subTitleX, subTitleY)
 
                     ImageIO.write(output, "PNG", filePath.toFile())
-                    updateParameters(parameters)
+
                     filePath.toFile()
                 } catch (_: IOException) {
                     null
@@ -132,54 +130,22 @@ class ImageRepository {
 
     private fun Color.toAwtColor(): java.awt.Color = java.awt.Color(red, green, blue, alpha)
 
-    private fun updateParameters(parameters: Parameters) {
-        settings[PreferenceKeys.IMAGE_TITLE_TEXT] = parameters.title.text
-        settings[PreferenceKeys.IMAGE_TITLE_FONT] = parameters.title.font.value
-        settings[PreferenceKeys.IMAGE_TITLE_SIZE] = parameters.title.size
-        settings[PreferenceKeys.IMAGE_TITLE_COLOR] = parameters.title.color
-        settings[PreferenceKeys.IMAGE_TITLE_POSITION_X] = parameters.title.position.x
-        settings[PreferenceKeys.IMAGE_TITLE_POSITION_Y] = parameters.title.position.y
-
-        settings[PreferenceKeys.IMAGE_SUBTITLE_TEXT] = parameters.subTitle.text
-        settings[PreferenceKeys.IMAGE_SUBTITLE_FONT] = parameters.subTitle.font.value
-        settings[PreferenceKeys.IMAGE_SUBTITLE_SIZE] = parameters.subTitle.size
-        settings[PreferenceKeys.IMAGE_SUBTITLE_COLOR] = parameters.subTitle.color
-        settings[PreferenceKeys.IMAGE_SUBTITLE_POSITION_X] = parameters.subTitle.position.x
-        settings[PreferenceKeys.IMAGE_SUBTITLE_POSITION_Y] = parameters.subTitle.position.y
-
-        settings[PreferenceKeys.IMAGE_WIDTH] = parameters.width
-        settings[PreferenceKeys.IMAGE_HEIGHT] = parameters.height
-        settings[PreferenceKeys.IMAGE_START_COLOR] = parameters.startColor
-        settings[PreferenceKeys.IMAGE_END_COLOR] = parameters.endColor
+    fun updateParameters(parameters: Parameters) {
+        if (parameters.isValid.not()) return
+        try {
+            settings[PreferenceKeys.IMAGE_PARAMETERS] = Json.encodeToString(parameters)
+        } catch (e: Exception) {
+            println(e)
+        }
     }
 
     private fun getParameters(): Parameters {
-        return Parameters(
-            title = TitleParameter(
-                text = settings.getString(PreferenceKeys.IMAGE_TITLE_TEXT, ""),
-                font = model.Font(settings.getString(PreferenceKeys.IMAGE_TITLE_FONT, "")),
-                size = settings.getInt(PreferenceKeys.IMAGE_TITLE_SIZE, 20),
-                color = settings[PreferenceKeys.IMAGE_TITLE_COLOR, 0L].toULong(),
-                position = Position(
-                    x = settings[PreferenceKeys.IMAGE_TITLE_POSITION_X, 0f],
-                    y = settings[PreferenceKeys.IMAGE_TITLE_POSITION_Y, 0f],
-                )
-            ),
-            subTitle = TitleParameter(
-                text = settings.getString(PreferenceKeys.IMAGE_SUBTITLE_TEXT, ""),
-                font = model.Font(settings.getString(PreferenceKeys.IMAGE_SUBTITLE_FONT, "")),
-                size = settings.getInt(PreferenceKeys.IMAGE_SUBTITLE_SIZE, 20),
-                color = settings[PreferenceKeys.IMAGE_SUBTITLE_COLOR, 0L].toULong(),
-                position = Position(
-                    x = settings[PreferenceKeys.IMAGE_SUBTITLE_POSITION_X, 0f],
-                    y = settings[PreferenceKeys.IMAGE_SUBTITLE_POSITION_Y, 0f],
-                )
-            ),
-            width = settings[PreferenceKeys.IMAGE_WIDTH, 1200],
-            height = settings[PreferenceKeys.IMAGE_HEIGHT, 800],
-            startColor = settings[PreferenceKeys.IMAGE_START_COLOR, 0L].toULong(),
-            endColor = settings[PreferenceKeys.IMAGE_END_COLOR, 0L].toULong(),
-        )
+        try {
+            return Json.decodeFromString<Parameters>(settings.getString(PreferenceKeys.IMAGE_PARAMETERS, ""))
+        } catch (e: Exception) {
+            println(e)
+            return Parameters.initValue
+        }
     }
 
     private fun getHeight(font: Font): Int {

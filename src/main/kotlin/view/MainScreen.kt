@@ -23,7 +23,7 @@ fun MainScreen(
                 date = state.previewUpdate,
                 isLoading = state.isLoading,
                 modifier =
-                    Modifier.fillMaxHeight().fillMaxWidth(),
+                Modifier.fillMaxHeight().fillMaxWidth(),
             )
         },
         second = {
@@ -44,7 +44,7 @@ fun MainScreen(
 @Composable
 private fun Preview() {
     MainScreen(
-        state = MainState.initValue,
+        state = MainState.Null,
         onEvent = {},
     )
 }
