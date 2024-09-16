@@ -8,8 +8,8 @@
     <string name="text_parameter_font">Font</string>
     <string name="text_parameter_text_size">Size</string>
     <string name="text_parameter_text_color">Color</string>
-    <string name="text_parameter_text_x">X</string>
-    <string name="text_parameter_text_y">Y</string>
+    <string name="text_parameter_text_x">X(Ratio)</string>
+    <string name="text_parameter_text_y">Y(Ratio)</string>
 
     <string name="category_size">Size</string>
     <string name="width_title">Width</string>
@@ -19,5 +19,5 @@
     <string name="start_color_title">Start</string>
     <string name="end_color_title">End</string>
     <string name="preview">Preview</string>
-    <string name="save">Save</string>
+    <string name="save">Save to Desktop</string>
 </resources>
