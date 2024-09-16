@@ -123,7 +123,7 @@ fun MainProcessor(
     fontRepository: FontRepository,
 ): MainState {
     val scope = rememberCoroutineScope()
-    var parameters by remember { mutableStateOf(Parameters.initValue) }
+    var parameters by remember { mutableStateOf(imageRepository.localParameters) }
     var previewFile by remember { mutableStateOf(File("")) }
     var previewUpdate by remember { mutableStateOf(0L) }
     var previewJob by remember { mutableStateOf<Job?>(null) }
