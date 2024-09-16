@@ -60,6 +60,14 @@ sealed interface MainEvent {
         val value: ULong?,
     ) : MainEvent
 
+    data class ChangeTitleX(
+        val value: Float?,
+    ) : MainEvent
+
+    data class ChangeTitleY(
+        val value: Float?,
+    ) : MainEvent
+
     data class ChangeSubTitle(
         val value: String,
     ) : MainEvent
@@ -74,6 +82,14 @@ sealed interface MainEvent {
 
     data class ChangeSubTitleColor(
         val value: ULong?,
+    ) : MainEvent
+
+    data class ChangeSubTitleX(
+        val value: Float?,
+    ) : MainEvent
+
+    data class ChangeSubTitleY(
+        val value: Float?,
     ) : MainEvent
 
     data class ChangeWidth(
@@ -162,6 +178,26 @@ fun MainProcessor(
                     createPreviewFile()
                 }
 
+                is MainEvent.ChangeTitleX -> {
+                    parameters =
+                        parameters.copy(
+                            title = parameters.title.copy(
+                                position = parameters.title.position.copy(x = event.value ?: 0.5f)
+                            ),
+                        )
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeTitleY -> {
+                    parameters =
+                        parameters.copy(
+                            title = parameters.title.copy(
+                                position = parameters.title.position.copy(y = event.value ?: 0.5f)
+                            ),
+                        )
+                    createPreviewFile()
+                }
+
                 is MainEvent.ChangeSubTitle -> {
                     parameters =
                         parameters.copy(
@@ -190,6 +226,26 @@ fun MainProcessor(
                     parameters =
                         parameters.copy(
                             subTitle = parameters.subTitle.copy(color = event.value),
+                        )
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeSubTitleX -> {
+                    parameters =
+                        parameters.copy(
+                            subTitle = parameters.subTitle.copy(
+                                position = parameters.subTitle.position.copy(x = event.value ?: 0.5f)
+                            ),
+                        )
+                    createPreviewFile()
+                }
+
+                is MainEvent.ChangeSubTitleY -> {
+                    parameters =
+                        parameters.copy(
+                            subTitle = parameters.subTitle.copy(
+                                position = parameters.subTitle.position.copy(y = event.value ?: 0.5f)
+                            ),
                         )
                     createPreviewFile()
                 }

@@ -7,4 +7,5 @@ data class TitleParameter(
     val font: Font,
     val size: Int?,
     val color: ULong?,
+    val position: Position,
 )

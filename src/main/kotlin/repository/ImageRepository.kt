@@ -34,6 +34,11 @@ class ImageRepository {
 
             if (parameters.isValid) {
                 try {
+                    println(parameters)
+
+                    val imageWidth = parameters.width?.toFloat() ?: 0f
+                    val imageHeight = parameters.height?.toFloat() ?: 0f
+
                     val titleColor = Color(parameters.title.color ?: Color.Transparent.value)
                     val subTitleColor = Color(parameters.subTitle.color ?: Color.Transparent.value)
                     val startColor = Color(parameters.startColor ?: Color.Transparent.value)
@@ -51,18 +56,19 @@ class ImageRepository {
                             0f,
                             0f,
                             startColor.toAwtColor(),
-                            parameters.width?.toFloat() ?: 0f,
-                            parameters.height?.toFloat() ?: 0f,
+                            imageWidth,
+                            imageHeight,
                             endColor.toAwtColor(),
                         )
                     imageGraphic.fillRect(0, 0, parameters.width ?: 0, parameters.height ?: 0)
 
                     imageGraphic.color = titleColor.toAwtColor()
+
                     val titleFont = Font(parameters.title.font.value, Font.PLAIN, parameters.title.size ?: 0)
                     val titleWidth = getWidth(titleFont, parameters.title.text)
                     val titleHeight = getHeight(titleFont)
-                    val titleX = getCenterX(maxWidth = parameters.width ?: 0, textWidth = titleWidth)
-                    val titleY = getCenterY(maxHeight = parameters.height ?: 0, textHeight = titleHeight)
+                    val titleX = imageWidth * parameters.title.position.x - titleWidth / 2
+                    val titleY = imageHeight * parameters.title.position.y + titleHeight / 2
 
                     imageGraphic.font = titleFont
                     imageGraphic.drawString(parameters.title.text, titleX, titleY)
@@ -71,16 +77,8 @@ class ImageRepository {
                     val subTitleFont = Font(parameters.subTitle.font.value, Font.PLAIN, parameters.subTitle.size ?: 0)
                     val subTitleWidth = getWidth(subTitleFont, parameters.subTitle.text)
                     val subTitleHeight = getHeight(subTitleFont)
-                    val subTitleX =
-                        getCenterX(
-                            maxWidth = parameters.width ?: 0,
-                            textWidth = subTitleWidth,
-                        )
-                    val subTitleY =
-                        getCenterY(
-                            maxHeight = parameters.height ?: 0,
-                            textHeight = subTitleHeight,
-                        ) + titleHeight
+                    val subTitleX = imageWidth * parameters.subTitle.position.x - subTitleWidth / 2
+                    val subTitleY = imageHeight * parameters.subTitle.position.y + subTitleHeight / 2
 
                     imageGraphic.font = subTitleFont
                     imageGraphic.drawString(parameters.subTitle.text, subTitleX, subTitleY)

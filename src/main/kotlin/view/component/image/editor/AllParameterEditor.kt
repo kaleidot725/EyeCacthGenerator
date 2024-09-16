@@ -49,6 +49,8 @@ fun AllParameterEditor(
             onChangedFont = { onEvent(MainEvent.ChangeTitleFont(it)) },
             onChangedSize = { onEvent(MainEvent.ChangeTitleSize(it)) },
             onChangedColor = { onEvent(MainEvent.ChangeTitleColor(it)) },
+            onChangedXPosition = { onEvent(MainEvent.ChangeTitleX(it)) },
+            onChangedYPosition = { onEvent(MainEvent.ChangeTitleY(it)) },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -62,6 +64,8 @@ fun AllParameterEditor(
             onChangedFont = { onEvent(MainEvent.ChangeSubTitleFont(it)) },
             onChangedSize = { onEvent(MainEvent.ChangeSubTitleSize(it)) },
             onChangedColor = { onEvent(MainEvent.ChangeSubTitleColor(it)) },
+            onChangedXPosition = { onEvent(MainEvent.ChangeSubTitleX(it)) },
+            onChangedYPosition = { onEvent(MainEvent.ChangeSubTitleY(it)) },
             modifier = Modifier.fillMaxWidth(),
         )
 

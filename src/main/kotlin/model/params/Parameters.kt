@@ -14,28 +14,30 @@ data class Parameters(
     val isValid: Boolean
         get() {
             return width != null &&
-                width != 0 &&
-                height != null &&
-                height != 0
+                    width != 0 &&
+                    height != null &&
+                    height != 0
         }
 
     companion object {
         val initValue =
             Parameters(
                 title =
-                    TitleParameter(
-                        "Hello World",
-                        Font("Arial"),
-                        48,
-                        color = Color.White.value,
-                    ),
+                TitleParameter(
+                    "Hello World",
+                    Font("Arial"),
+                    48,
+                    color = Color.White.value,
+                    position = Position(0.5f, 0.5f),
+                ),
                 subTitle =
-                    TitleParameter(
-                        "Hello World",
-                        Font("Arial"),
-                        48,
-                        color = Color.White.value,
-                    ),
+                TitleParameter(
+                    "Hello World",
+                    Font("Arial"),
+                    48,
+                    color = Color.White.value,
+                    position = Position(0.5f, 0.5f),
+                ),
                 width = 1920,
                 height = 1080,
                 startColor = Color.Red.value,
