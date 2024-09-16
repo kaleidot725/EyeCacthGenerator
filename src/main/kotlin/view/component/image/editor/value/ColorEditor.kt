@@ -51,7 +51,7 @@ fun ColorEditor(
         )
     }
 
-    val textState = rememberTextFieldState(currentColor.toRgbaHexString())
+    val textState = rememberTextFieldState(currentColor.toRgbaHexString().uppercase())
     LaunchedEffect(textState.text) {
         try {
             val text = textState.text.toString()
@@ -87,7 +87,7 @@ fun ColorEditor(
                             currentColor = currentColor,
                             onChangedColor = {
                                 val color = Color(it)
-                                textState.setTextAndSelectAll(color.toRgbaHexString())
+                                textState.setTextAndSelectAll(color.toRgbaHexString().uppercase())
                             },
                         )
                     }

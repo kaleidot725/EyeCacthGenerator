@@ -31,6 +31,10 @@ dependencies {
     implementation("com.russhwolf:multiplatform-settings:1.1.1")
 }
 
+//intelliJPlatformBuild = "242.21829.142"
+//intellijPlatform-util-ui = { module = "com.jetbrains.intellij.platform:util-ui", version.ref = "intelliJPlatformBuild" }
+//intellijPlatform-icons = { module = "com.jetbrains.intellij.platform:icons", version.ref = "intelliJPlatformBuild" }
+
 kotlin {
     jvmToolchain {
         vendor = JvmVendorSpec.JETBRAINS

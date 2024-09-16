@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import jp.kaleidot725.eyegen.eyegen.generated.resources.Res
 import jp.kaleidot725.eyegen.eyegen.generated.resources.save
@@ -20,7 +21,9 @@ import jp.kaleidot725.eyegen.eyegen.generated.resources.title_title
 import model.Font
 import model.params.Parameters
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.jewel.ui.Orientation
 import org.jetbrains.jewel.ui.component.DefaultButton
+import org.jetbrains.jewel.ui.component.Divider
 import org.jetbrains.jewel.ui.component.Text
 import view.MainEvent
 import view.component.image.editor.category.BackgroundCategoryEditor
@@ -36,7 +39,7 @@ fun AllParameterEditor(
 ) {
     Column(
         modifier = modifier.padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         TitleCategoryEditor(
             allFonts = allFonts,
@@ -49,6 +52,8 @@ fun AllParameterEditor(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        Divider(orientation = Orientation.Horizontal, color = Color.DarkGray)
+
         TitleCategoryEditor(
             allFonts = allFonts,
             label = stringResource(Res.string.subtitle_title),
@@ -60,12 +65,16 @@ fun AllParameterEditor(
             modifier = Modifier.fillMaxWidth(),
         )
 
+        Divider(orientation = Orientation.Horizontal, color = Color.DarkGray)
+
         SizeCategoryEditor(
             width = parameters.width,
             height = parameters.height,
             onChangedWidth = { onEvent(MainEvent.ChangeWidth(it)) },
             onChangedHeight = { onEvent(MainEvent.ChangeHeight(it)) },
         )
+
+        Divider(orientation = Orientation.Horizontal, color = Color.DarkGray)
 
         BackgroundCategoryEditor(
             startColor = parameters.startColor,
